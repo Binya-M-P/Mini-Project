@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        /* Reset some default styles for cleaner presentation */
+        body, h1, ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style the sidebar */
+        #sidebar {
+            background-color: #333;
+            color: white;
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+
+        #sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+        }
+
+        #sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Style the content area */
+        #content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+          }
+          
+          th {
+            height: 50px;
+          }
+          td {
+            height: 40px;
+            text-align:center;
+          }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <h1>Admin Dashboard</h1>
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="{% url 'viewperson' %}">View Users</a></li>
+            <li><a href="{% url 'addperson' %}">Add Employees</a></li>
+            <!--<li><a href="#">Products</a></li>
+            <li><a href="#">Settings</a></li>-->
+        </ul>
+    </div>
+
+    <!-- Content area -->
+    <div id="content">
+        <h1>Admin</h1>
+        <font size="+1" color="white">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="messages" id="msg" >
+                        {{message}}
+                    </div>
+                    <script>
+                        // Add JavaScript to hide the message after 5 seconds
+                        setTimeout(function () {
+                            var messagesContainer = document.querySelector('.messages');
+                            if (messagesContainer) {
+                                messagesContainer.style.display = 'none';
+                            }
+                        }, 5000); // 5000 milliseconds = 5 seconds
+                    </script>
+                {% endfor %}
+                
+            {% endif %}
+        </font>
+        <table align="center" height="550%" border=2px soid black>
+            <tr>
+                
+                <th>Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Price</th>
+                <!--<th>Status</th>
+                <th>Edit</th>
+                <th>Delete</th>-->
+            </tr>
+            {% for item in items %}
+            <tr>
+                
+                <td>{{item.name}}</td>
+                <td>{{item.cid}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.image}}</td>
+                <td>{{item.price}}</td>
+                    
+                    <!--<td>{{item.status}}</td>
+                    <td><a href="">Edit</a></td>
+                    <td><a href="">Delete</a></td>-->
+                
+            </tr>   
+            {% endfor %}
+        </table>      
+    </div>
+</body>
+</html>

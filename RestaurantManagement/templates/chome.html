@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <style>
+            .div1
+            {
+                background-image:url("{% static 'myimages/chomebg.jpg'%}");
+                background-color: rgba(255, 0, 0, 0.4);
+                background-repeat: no-repeat;
+                background-size: cover;
+                width:100%;
+                
+            }
+            .div11
+            {
+                float:right;
+            }
+            h3 
+            {
+                word-spacing: 30px;
+                color:#F3B820;
+                text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+                float:right;
+            }
+            h1
+            {
+                font-size: 70px;
+                padding:25px;
+                color: black;
+                text-shadow: -1px 1px 1px #F3B820,
+				  1px 1px 5px #F3B820,
+				  1px -1px 0 #F3B820,
+				  -1px -1px 0 #F3B820; 
+            }
+            header
+            {
+                top: 0;
+                position: sticky;
+                background-size: cover;
+                background-color: black;
+                float:right;
+                width:100%
+                
+            }
+            h4
+            {
+                word-spacing: 30px;
+                font-size: 30px;
+            }
+            td
+            {
+                padding:6px
+            }
+            h5
+            {
+                font-size: 20px;
+            }
+            a
+            {
+                text-decoration:none;
+            }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+    
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: rgba(255,255,255,0.5);
+                min-width: 200px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                
+            }
+    
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+    
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+    
+            .dropdown-content a:hover {
+                background-color: rgba(255,255,255,0.5);
+            }
+            .dropbtn
+            {
+                border: none; 
+                background-color: transparent;
+            }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <script>
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+                //alert("Enter")
+            }
+        </script>
+        <header>
+            <h3>HOME     ABOUT    SERVICE     MENU   CART  CONTACT  
+                <a href="{% url 'customerprofile' %}"><font size="+1" color="#F3B820">PROFILE</font></a>
+                
+                <!--<div class="dropdown">
+                    <button class="dropbtn"><font size="+1" color="#F3B820">PROFILE  </font></button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'customerprofile' %}"><font size="+1" color="#F3B820">Edit</a>
+                        <a href="{% url 'changepassword' %}"><font size="+1" color="#F3B820">Change Password</font></a>
+                    </div>
+                </div>-->
+
+
+
+            
+            {% if user.is_authenticated %}
+            
+                {% csrf_token %}
+                <a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>
+            
+                <!--<a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>-->
+            {% endif %}
+            
+        </h3>
+        </header>
+        <div class="div1">
+            <div class="div11">
+                
+            </div>
+            
+            <br><br><br><br><br>
+            <h1>Enjoy Our <br>Delicious meal</h1>
+            <br><br><br><br><br><br><br><br><br><br><br>
+            
+        </div>
+        <div class="menu">
+
+
+            <center><h4>Salads Pizza Burger <h4></center>
+            <div id="salad">
+                <table align="center">
+                    {% for item in salads %}
+                        <tr>
+                            <td>    
+                                <img src="{{item.image.url}}" width=200px heigth:200px>
+                            </td>
+                            <td>
+                                <h5>{{item.name}}<br></h5>
+                                {{item.description}}
+                            </td>
+                            <br>
+                            <br>
+                            <td>
+                                <b>{{item.price}}</b>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class ="piza" id="piza">
+                <table align="center">
+                    {% for item in pizza %}
+                        <tr>
+                            <td>    
+                                <img src="{{item.image.url}}" width=200px heigth:200px>
+                            </td>
+                            <td>
+                                <h5>{{item.name}}<br></h5>
+                                {{item.description}}
+                            </td>
+                            <br>
+                            <br>
+                            <td>
+                                <b>{{item.price}}</b>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class ="brgr" id="brgr">
+                <table align="center" padding="1px">
+                    {% for item in burger %}
+                        <tr>
+                            <td>    
+                                <img src="{{item.image.url}}" width=220px heigth:200px align="center">
+                            </td>
+                            <td>
+                                <h5>{{item.name}}<br></h5>
+                                {{item.description}}
+                            </td>
+                            <br>
+                            <br>
+                            <td>
+                                <b>{{item.price}}</b>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+        </div>
+        <script src="" async defer></script>
+    </body>
+</html>
