@@ -54,9 +54,11 @@
     <div id="sidebar">
         <h1>Admin Dashboard</h1>
         <ul>
-            <li><a href="#">Dashboard</a></li>
+            <li><a href="{% url 'adminhome' %}">Home</a></li>
             <li><a href="{% url 'viewperson' %}">View Users</a></li>
-            <li><a href="{% url 'addperson' %}">Add Employees</a></li>
+            <li><a href="{% url 'addperson' %}">Add Employee</a></li>
+            <li><a href="{% url 'additems' %}">Add items</a></li>
+            <li><a href="{% url 'admin_view_menu' %}">View Menu</a></li>
             <!--<li><a href="#">Products</a></li>
             <li><a href="#">Settings</a></li>-->
         </ul>
@@ -64,7 +66,7 @@
 
     <!-- Content area -->
     <div id="content">
-        <h1>Admin</h1>
+        <center><h1>MENU</h1></center>
         <font size="+1" color="white">
             {% if messages %}
                 {% for message in messages %}
@@ -102,7 +104,7 @@
                 <td>{{item.name}}</td>
                 <td>{{item.cid}}</td>
                 <td>{{item.description}}</td>
-                <td>{{item.image}}</td>
+                <td><img src="{{ item.image.url }}" alt="{{ item.name }}" width="10%"></td>
                 <td>{{item.price}}</td>
                     
                     <!--<td>{{item.status}}</td>

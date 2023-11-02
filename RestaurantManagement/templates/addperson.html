@@ -113,9 +113,11 @@
     <div id="sidebar">
         <h1>Admin Dashboard</h1>
         <ul>
-            <li><a href="#">Dashboard</a></li>
+            <li><a href="{% url 'adminhome' %}">Home</a></li>
             <li><a href="{% url 'viewperson' %}">View Users</a></li>
-            <li><a href="{% url 'addperson' %}">Add Users</a></li>
+            <li><a href="{% url 'addperson' %}">Add Employee</a></li>
+            <li><a href="{% url 'additems' %}">Add items</a></li>
+            <li><a href="{% url 'admin_view_menu' %}">View Menu</a></li>
             <!--<li><a href="#">Products</a></li>
             <li><a href="#">Settings</a></li>-->
         </ul>

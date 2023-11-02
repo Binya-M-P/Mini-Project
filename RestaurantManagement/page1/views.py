@@ -240,7 +240,7 @@ def delete_user(request,pk):
 
 def additems(request):
     if request.method == 'POST':
-        category=request.POST.get('category')
+        category=request.POST.get('cat')
         name=request.POST.get('name')
         description=request.POST.get('description')
         image=request.POST.get('image')

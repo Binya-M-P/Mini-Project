@@ -83,14 +83,24 @@
                     {% csrf_token %}
 
 
-                    
+                    <center>
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert {{message.tags}} m-2" id="msg" role="alert">
-                                {{message}}
+                            <div class="messages" id="msg">
+                                <font size="+0" style="color:white;">{{message}}</font>
                             </div>
+                            <script>
+                                // Add JavaScript to hide the message after 5 seconds
+                                setTimeout(function () {
+                                    var messagesContainer = document.querySelector('.messages');
+                                    if (messagesContainer) {
+                                        messagesContainer.style.display = 'none';
+                                    }
+                                }, 3000); // 5000 milliseconds = 5 seconds
+                            </script>
                         {% endfor %}
                     {% endif %}
+                    </center>
 
                     <center><b><font size="+2" color="white">Login</font></b><br></center><br>
                     <label for="username">Username:</label>

@@ -78,6 +78,13 @@
                 width:35%;
                 color:black;
             }
+            .logout {
+                margin-left: 150px;
+                padding: 0px;
+                width:20px;
+                display: flex;
+                align-items: center;
+            }
         </style>
         <script>
             function usernameval()
@@ -236,11 +243,7 @@
     </head>
     <body>
             <div class="div1">
-                <form action="" name="signupform" method='POST'>
-                    {% csrf_token %}
-                    <center><b><font size="+1" color="white">Edit your profile</font></b><br></center><br><br>
-                    
-                    <font size="+1" color="white">
+                <center><font size="+1" color="white">
                     {% if messages %}
                         {% for message in messages %}
                             <div class="messages" id="msg" >
@@ -258,7 +261,22 @@
                         {% endfor %}
                         
                     {% endif %}
-                </font>
+                </font></center>
+                <form action="" name="signupform" method='POST'>
+                    {% csrf_token %}
+                    <div id="logout">
+                        <h3>
+                        {% if user.is_authenticated %}
+                            <img src="{% static 'myimages/profile.png' %}" width="5%">
+                            <font style="color:#F3B820;">{{user_profile.name}}</font>
+                        {% endif %}
+                        
+                        </h3><br><br>
+                        
+                    </div>
+                    <center><b><font size="+1" color="white">Edit your profile</font></b><br></center><br><br>
+                    
+                    
                     <font size="-1" color="white">**Email can not be edit</font><br>
 
                     <!--<label for="username">Username:</label>
