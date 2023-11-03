@@ -133,8 +133,9 @@ STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'static')
 ]
 
-MEDIA_URL='/images/'
-MEDIA_ROOT=BASE_DIR/'static'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 
@@ -184,3 +185,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+    'page1.backends.GoogleAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

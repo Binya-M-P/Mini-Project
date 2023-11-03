@@ -111,36 +111,6 @@
             padding: 5px;
         }
     </style>
-    <script>
-        function iname()
-        {
-            var name=document.getElementById('name').value;
-            var errorMessage=document.getElementById('ename');
-            var spaceRegex = /\s/;
-            if(name==null || name=="")
-            {
-                document.getElementById('ename').innerHTML="Username can't be null"
-                btn.disabled=true;
-
-            }
-            else if(spaceRegex.test(name)) {
-                document.getElementById('ename').innerHTML="Item name can't be null";
-                btn.disabled=true;
-                // Prevent form submission
-            }
-            else if(name.length<2)
-            {
-                document.getElementById('ename').innerHTML='Username must be at least 4 characters long';
-                btn.disabled=true;
-            }
-            else if((name.replace(/[^0-9]/g,"").length) > ((username.length)-1))
-            {
-                document.getElementById('ename').innerHTML='Username must contains at least 3 alphebets';
-                btn.disabled=true;
-            }
-
-        }
-    </script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -167,7 +137,7 @@
             {% endif %}
             </h3><br><br>
         </div>
-        <form action="" name="additem" method='POST' enctype="multipart/form-data">
+        <form action="" name="addcategory" method='POST' enctype="multipart/form-data">
             {% csrf_token %}
             <center><b><font size="+1" color="white" border=1px solid black>Add Item</font></b><br></center><br><br>
 
@@ -180,27 +150,13 @@
                 {% endfor %}
             {% endif %}
 
-            <label for="cat">Choose category:</label>
+            <label for="name">Item id</label>
+            <input type="number" name="id" id="id" Required><br>
             
-            <select name="cat" id="cat">
-                {% for item in category %}
-
-                    <option value={{item.cname}}>{{item.cname}}</option>
-                {% endfor %}
-            </select><br><br>
             <label for="name">Item name:</label>
-            <input type="text" name="name" id="name" oninput="iname()" Required><br>
-            <p id="ename" style="color: #f7e6b5; font-size:75%"></p>
+            <input type="text" name="name" id="name" Required><br>
 
-            <label for="description">description:</label>
-            <input type="text" name="description" id="description" Required><br>
-            <br>
-            <label for="image">Select an Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" Required><br><br>
             
-            <label for="price">Price</label>
-            
-            <input type="number" id="price" name="price" Required><br><br>
 
             <center><button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button></center>
             <br>

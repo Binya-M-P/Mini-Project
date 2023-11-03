@@ -13,6 +13,8 @@ def index(request):
 def menu(request):
     return render(request,'menu.html')
 
+
+
 #@cache_control(no_cash=True,must_validate=True,no_store=True)
 def loginpage(request):
     #if 'username' in request.session:
@@ -70,7 +72,7 @@ def signup(request):
         elif username != '' and email != '' and phone != '' and password != '':
             user=User.objects.create_user(username=username,email=email,password=password)
             user.save();
-            data=Person(name=username,email=email,phone=phone,role_id=1,address=address,password=password)
+            data=Person(user_id=user,name=username,email=email,phone=phone,role_id=1,address=address,password=password)
             data.save()
             messages.info(request,"Successfully registered")
             #data2=Users(USERNAME=username,Email address=email)
@@ -108,8 +110,6 @@ def staffhome(request):
 
 
 def logout_user(request):
-    
-
     if 'username' in request.session:
         #session.objects.all().delete()
         logout(request)
@@ -240,22 +240,29 @@ def delete_user(request,pk):
 
 def additems(request):
     if request.method == 'POST':
-        category=request.POST.get('cat')
+        categoryn=request.POST.get('cat')
         name=request.POST.get('name')
         description=request.POST.get('description')
-        image=request.POST.get('image')
+        image = request.FILES['image']
         price=request.POST.get('price')
+        cat = Category.objects.filter(cname=categoryn).first()
+        
         if Menutbl.objects.filter(name=name).exists():
             messages.info(request,"The item already exists")
             return redirect('additems')
         else:
-            item=Menutbl(cid=category,name=name,description=description,image=image,price=price)
+            item=Menutbl(cid=cat,name=name,description=description,image=image,price=price)
             item.save();
-            return redirect('adminhome')
+            return redirect('a_view_menu')
     else:
         category=Category.objects.all()
         return render(request,'additems.html',{"category":category})
 
-def admin_view_menu(request):
+def a_view_menu(request):
     items=Menutbl.objects.all()
-    return render(request,'admin_view_menu.html',{"items":items})
+    return render(request,'a_view_menu.html',{"items":items})
+def a_view_category(request):
+    categories=Category.objects.all()
+    return render(request,'a_view_category.html',{"cat":categories})
+def a_add_category(request):
+    return render(request,'a_add_category.html')

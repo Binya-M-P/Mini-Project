@@ -30,9 +30,10 @@ class Category(models.Model):
     
 class Menutbl(models.Model):
     cid=models.ForeignKey(Category,null=True,on_delete=models.CASCADE)
+    cn=models.CharField(max_length=50,null=False,blank=False,default="")
     name=models.CharField(max_length=50,null=False,blank=False)
     description=models.CharField(max_length=70,null=False,blank=False)
-    image=models.ImageField(upload_to="images",null=False,blank=False)
+    image = models.ImageField(upload_to="images", null=False, blank=False)
     price=models.FloatField(null=False,blank=False)
     status=models.BooleanField(default=False)
     

@@ -35,7 +35,11 @@ urlpatterns = [
     path('changepassword',views.changepassword,name="changepassword"),
     path('delete_user',views.delete_user,name="delete_user"),
     path('additems',views.additems,name="additems"),
-    path('admin_view_menu',views.admin_view_menu,name="admin_view_menu"),
+    path('a_view_category',views.a_view_category,name="a_view_category"),
+    path('a_view_menu',views.a_view_menu,name="a_view_menu"),
+    path('a_add_category',views.a_add_category,name="a_add_category"),
+    #path('new',views.new,name="new"),
+
 
     path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),

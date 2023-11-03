@@ -89,6 +89,7 @@
                 var address=document.getElementById('address');
                 var password=document.getElementById('password');
                 var cpassword=document.getElementById('cpassword');
+                var spaceRegex = /\s/;
 
                 const btn=document.getElementById('btn');
                 if(username==null || username=="")
@@ -96,6 +97,15 @@
                     document.getElementById('up').innerHTML="Username can't be null"
                     btn.disabled=true;
 
+                }
+                else if(spaceRegex.test(username)) {
+                    document.getElementById('up').innerHTML="Username can't be null";
+                    btn.disabled=true;
+                    m.disabled=true;
+                    phone.disabled=true;
+                    address.disabled=true;
+                    password.disabled=true;
+                    cpassword.disabled=true;// Prevent form submission
                 }
                 else if(username.length<4)
                 {

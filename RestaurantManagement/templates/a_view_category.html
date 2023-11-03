@@ -1,4 +1,7 @@
+{% load static %}
+
 <!DOCTYPE html>
+
 <html>
 <head>
     <title>Admin Dashboard</title>
@@ -37,7 +40,7 @@
             padding: 20px;
         }
         table {
-            width: 100%;
+            width: 50%;
           }
           
           th {
@@ -59,7 +62,6 @@
             <li><a href="{% url 'addperson' %}">Add Employee</a></li>
             <li><a href="{% url 'additems' %}">Add items</a></li>
             <li><a href="{% url 'a_view_menu' %}">View Menu</a></li>
-
             <!--<li><a href="#">Products</a></li>
             <li><a href="#">Settings</a></li>-->
         </ul>
@@ -67,7 +69,7 @@
 
     <!-- Content area -->
     <div id="content">
-        <center><h1>Persons</h1></center>
+        <center><h1>Categories</h1></center>
         <font size="+1" color="white">
             {% if messages %}
                 {% for message in messages %}
@@ -90,28 +92,26 @@
         <table align="center" height="550%" border=2px soid black>
             <tr>
                 
-                <th>Username</th>
-                <th>Email id</th>
-                <th>Phone number</th>
-                <th>Role Id</th>
-                <th></th>
+                <th>Id</th>
+                <th>Category Name</th>
+                {% comment %} <th>Description</th>
+                <th>Image</th>
+                <th>Price</th> {% endcomment %}
                 <!--<th>Status</th>
                 <th>Edit</th>
                 <th>Delete</th>-->
             </tr>
-            {% for item in person %}
+            {% for item in cat %}
             <tr>
-                {% if item.role_id != 3 %}
-                    
-                    <td>{{item.name}}</td>
-                    <td>{{item.email}}</td>
-                    <td>{{item.phone}}</td>
-                    <td>{{item.role_id}}</td>
+                
+                <td>{{item.cid}}</td>
+                <td>{{item.cname}}</td>
+                
                     
                     <!--<td>{{item.status}}</td>
                     <td><a href="">Edit</a></td>
                     <td><a href="">Delete</a></td>-->
-                {% endif %}
+                
             </tr>   
             {% endfor %}
         </table>      
