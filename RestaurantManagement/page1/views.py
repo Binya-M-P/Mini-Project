@@ -141,9 +141,9 @@ def adminhome(request):
     #user_profile = get_object_or_404(Person, username=username)
     #return render(request,'customerprofile.html')
 
-def addperson(request,):
+def a_add_person(request,):
     #user_profile = get_object_or_404(Person, user__name=username)
-    #return render(request,'addperson.html')
+    #return render(request,'a_add_person.html')
 
     if request.method == 'POST':
         username=request.POST.get('username')
@@ -169,12 +169,12 @@ def addperson(request,):
             #data2=Users(USERNAME=username,Email address=email)
             return render(request,'adminhome.html')
     else:
-        return render(request,'addperson.html')
+        return render(request,'a_add_person.html')
 
 
-def viewperson(request):
+def a_view_person(request):
     person=Person.objects.all()
-    return render(request,'viewperson.html',{"person":person})
+    return render(request,'a_view_person.html',{"person":person})
 
 
 
@@ -235,10 +235,10 @@ def delete_user(request,pk):
         #records_to_delete.delete()
         messages.success(request,"Changes are saved successfully !")
             
-    return redirect('viewperson')
+    return redirect('a_view_person')
 
 
-def additems(request):
+def a_add_items(request):
     if request.method == 'POST':
         categoryn=request.POST.get('cat')
         name=request.POST.get('name')
@@ -249,14 +249,14 @@ def additems(request):
         
         if Menutbl.objects.filter(name=name).exists():
             messages.info(request,"The item already exists")
-            return redirect('additems')
+            return redirect('a_add_items')
         else:
             item=Menutbl(cid=cat,name=name,description=description,image=image,price=price)
             item.save();
             return redirect('a_view_menu')
     else:
         category=Category.objects.all()
-        return render(request,'additems.html',{"category":category})
+        return render(request,'a_add_items.html',{"category":category})
 
 def a_view_menu(request):
     items=Menutbl.objects.all()
@@ -266,3 +266,21 @@ def a_view_category(request):
     return render(request,'a_view_category.html',{"cat":categories})
 def a_add_category(request):
     return render(request,'a_add_category.html')
+
+
+def a_edit_menu_item(request, item_id):
+    item = Menutbl.objects.get(pk=item_id)
+    cat = Category.objects.all()
+    # if request.method == 'POST':
+    #     categoryn=request.POST.get('cat')
+    #     name=request.POST.get('name')
+    #     description=request.POST.get('description')
+    #     image = request.FILES['image']
+    #     price=request.POST.get('price')
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('a_view_menu')
+    # else:
+    #     form = MenutblEditForm(instance=item)
+    return render(request, 'a_edit_menu_item.html', {'item': item,'category':cat})
+

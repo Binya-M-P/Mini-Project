@@ -68,6 +68,17 @@
             font-size:100%;
             color:white;
         }
+        textarea
+        {
+            border: 1px  solid #F3B820;
+            border-radius: 20px;
+            padding: 7px 5px;
+            margin: 2px 0;
+            width:100%;
+            background-color:#343230;
+            font-size:100%;
+            color:white;
+        }
         input[type=number]
         {
             border: 1px  solid #F3B820;
@@ -111,6 +122,36 @@
             padding: 5px;
         }
     </style>
+    <script>
+        function iname()
+        {
+            var name=document.getElementById('name').value;
+            var errorMessage=document.getElementById('ename');
+            var spaceRegex = /\s/;
+            if(name==null || name=="")
+            {
+                document.getElementById('ename').innerHTML="Username can't be null"
+                btn.disabled=true;
+
+            }
+            else if(spaceRegex.test(name)) {
+                document.getElementById('ename').innerHTML="Item name can't be null";
+                btn.disabled=true;
+                // Prevent form submission
+            }
+            else if(name.length<2)
+            {
+                document.getElementById('ename').innerHTML='Username must be at least 4 characters long';
+                btn.disabled=true;
+            }
+            else if((name.replace(/[^0-9]/g,"").length) > ((username.length)-1))
+            {
+                document.getElementById('ename').innerHTML='Username must contains at least 3 alphebets';
+                btn.disabled=true;
+            }
+
+        }
+    </script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -130,7 +171,7 @@
             {% endif %}
             </h3><br><br>
         </div>
-        <form action="" name="addcategory" method='POST' enctype="multipart/form-data">
+        <form action="" name="additem" method='POST' enctype="multipart/form-data">
             {% csrf_token %}
             <center><b><font size="+1" color="white" border=1px solid black>Add Item</font></b><br></center><br><br>
 
@@ -143,13 +184,34 @@
                 {% endfor %}
             {% endif %}
 
-            <label for="name">Item id</label>
-            <input type="number" name="id" id="id" Required><br>
+            <label for="cat">Selected category id {{item.cid}} you can Choose another category:</label>
             
-            <label for="name">Item name:</label>
-            <input type="text" name="name" id="name" Required><br>
+            <select name="cat" id="cat" value="{{item.cid}}">
+                <option value="">--select--</option>
+                {% for cat in category %}
+                <option value={{cat.cname}}>{{cat.cname}}</option>
+                {% endfor %} 
+            </select><br><br>
+            <input type="text" name="name" id="name" oninput="iname()" value="{{item.cid}}" Required><br>
 
+            <label for="name">Item name:</label>
+            <input type="text" name="name" id="name" oninput="iname()" value="{{item.name}}" Required><br>
+            <p id="ename" style="color: #f7e6b5; font-size:75%"></p>
+
+            <label for="description">description:</label>
+            <textarea name="description" id="description" rows="4" cols="50" required>{{ item.description }}</textarea><br>
+            <br>
+            <label for="existing-image">Existing Image:</label>
+            <img src="{{ item.image.url }}" alt="Existing Image" width="50px">
+            <br>
+            <label for="image">Select a new Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" Required><br><br>
             
+           
+
+            <label for="price">Price</label>
+            
+            <input type="number" id="price" name="price" value="{{item.price}}" Required><br><br>
 
             <center><button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button></center>
             <br>

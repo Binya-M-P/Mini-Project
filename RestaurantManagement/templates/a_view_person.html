@@ -1,7 +1,4 @@
-{% load static %}
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>Admin Dashboard</title>
@@ -63,7 +60,7 @@
 
     <!-- Content area -->
     <div id="content">
-        <center><h1>MENU</h1></center>
+        <center><h1>Persons</h1></center>
         <font size="+1" color="white">
             {% if messages %}
                 {% for message in messages %}
@@ -86,37 +83,28 @@
         <table align="center" height="550%" border=2px soid black>
             <tr>
                 
-                <th>Name</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Image</th>
-                <th>Price</th>
-                <th>Status</th>
+                <th>Username</th>
+                <th>Email id</th>
+                <th>Phone number</th>
+                <th>Role Id</th>
+                <th></th>
+                <!--<th>Status</th>
                 <th>Edit</th>
-                <th>Delete</th>
+                <th>Delete</th>-->
             </tr>
-            {% for item in items %}
+            {% for item in person %}
             <tr>
-                
-                <td>{{item.name}}</td>
-                <td>{{item.cid}}</td>
-                <td>{{item.description}}</td>
-                <td><img src="{{ item.image.url }}" alt="{{ item.name }}" width="10%"></td>
-                <td>{{item.price}}</td>
-                <td>{{item.status}}</td>
+                {% if item.role_id != 3 %}
+                    
+                    <td>{{item.name}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.phone}}</td>
+                    <td>{{item.role_id}}</td>
                     
                     <!--<td>{{item.status}}</td>
                     <td><a href="">Edit</a></td>
                     <td><a href="">Delete</a></td>-->
-                <td>
-                    <form method="post" action="{% url 'a_edit_menu_item' item.pk %}" name="MenutblEditForm" id="MenutblEditForm">
-                        {% csrf_token %}
-                        <button type="submit">Edit</button>
-                    </form>
-                </td>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
-
+                {% endif %}
             </tr>   
             {% endfor %}
         </table>      

@@ -47,20 +47,26 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div id="sidebar">
+    {% comment %} <div id="sidebar">
         <h1>Admin Dashboard</h1>
         <ul>
             <li><a href="{% url 'adminhome' %}">Home</a></li>
-            <li><a href="{% url 'viewperson' %}">View Users</a></li>
+            <li><a href="{% url 'a_view_person' %}">View Users</a></li>
             <li><a href="{% url 'addperson' %}">Add Employee</a></li>
-            <li><a href="{% url 'additems' %}">Add items</a></li>
+            <li><a href="{% url 'a_add_items' %}">Add items</a></li>
             <li><a href="{% url 'a_view_menu' %}">View Menu</a></li>
             <li><a href="{% url 'a_view_category' %}">View category</a></li>
             <li><a href="{% url 'a_add_category' %}">Add category</a></li>
             <!-- <li><a href="#">Settings</a></li>-->
             
         </ul>
+    </div> {% endcomment %}
+    
+    {% include 'a_sidebar.html' %}  <!-- Include the sidebar template -->
+    <div id="content">
+        <!-- Content of your admin dashboard goes here -->
     </div>
+    
 
     <!-- Content area -->
     <div id="logout">
