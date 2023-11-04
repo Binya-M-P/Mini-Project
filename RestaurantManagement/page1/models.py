@@ -28,11 +28,18 @@ class Category(models.Model):
     def __str__(self):
         return self.cname
     
+class Subcategory(models.Model):
+    cid=models.ForeignKey(Category,null=True,on_delete=models.CASCADE)
+    scname=models.models.CharField( max_length=200,null=False,blank=False)
+    def __str__(self):
+        return self.scname
+
+    
 class Menutbl(models.Model):
     cid=models.ForeignKey(Category,null=True,on_delete=models.CASCADE)
-    cn=models.CharField(max_length=50,null=False,blank=False,default="")
+    sub_category=models.ForeignKey(Subcategory,null=True,on_delete=models.CASCADE)
     name=models.CharField(max_length=50,null=False,blank=False)
-    description=models.CharField(max_length=70,null=False,blank=False)
+    description=models.CharField(max_length=200,null=False,blank=False)
     image = models.ImageField(upload_to="images", null=False, blank=False)
     price=models.FloatField(null=False,blank=False)
     status=models.BooleanField(default=False)

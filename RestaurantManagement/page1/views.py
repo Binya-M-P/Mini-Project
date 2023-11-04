@@ -270,17 +270,42 @@ def a_add_category(request):
 
 def a_edit_menu_item(request, item_id):
     item = Menutbl.objects.get(pk=item_id)
-    cat = Category.objects.all()
-    # if request.method == 'POST':
-    #     categoryn=request.POST.get('cat')
-    #     name=request.POST.get('name')
-    #     description=request.POST.get('description')
-    #     image = request.FILES['image']
-    #     price=request.POST.get('price')
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('a_view_menu')
+    category=Category.objects.all()
+    
+    if request.method == 'POST':
+        categoryn=request.POST.get('catn')
+        if categoryn == "" :
+            categoryn=item.cid
+        if categoryn is None:
+            categoryn=item.cid
+        name=request.POST.get('name')
+        if name is None:
+            name=item.name
+        #print("name",name)
+        description=request.POST.get('description')
+        if description is None:
+            description=item.description
+        if 'eimage' in request.FILES:
+            print("image bin",request.FILES) 
+            #image = request.FILES['eimage']
+            image = request.FILES.get('eimage', item.image)
+            #image = media/images/image;
+        else:
+            image = item.image
+        price=request.POST.get('price')
+        if price is None:
+            price=item.price
+        cat = Category.objects.filter(cname=categoryn).first()
+        if categoryn != ''and name != '' and description !='' and image !='' and price != '':
+            Menutbl.objects.filter(pk=item.pk).update(cid=cat,name=name,description=description,image=image,price=price)
+            messages.success(request,"Changes are saved successfully !")
+            return redirect('a_edit_menu_item',item.pk)
+        else:
+            return redirect('adminhome')
+        # if form.is_valid():
+        #     form.save()
+        #     return redirect('a_view_menu')
     # else:
     #     form = MenutblEditForm(instance=item)
-    return render(request, 'a_edit_menu_item.html', {'item': item,'category':cat})
+    return render(request, 'a_edit_menu_item.html', {'item': item,'category':category})
 
