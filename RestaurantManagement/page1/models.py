@@ -22,7 +22,7 @@ class Person(models.Model):
         return self.name
     
 class Category(models.Model):
-    cid=models.IntegerField(primary_key=True)
+    cid=models.IntegerField(primary_key=True,auto_created=True,)
     cname=models.CharField(max_length=50,null=False,blank=False)
     status=models.BooleanField(default=False)
     def __str__(self):
@@ -30,7 +30,7 @@ class Category(models.Model):
     
 class Subcategory(models.Model):
     cid=models.ForeignKey(Category,null=True,on_delete=models.CASCADE)
-    scname=models.models.CharField( max_length=200,null=False,blank=False)
+    scname=models.CharField( max_length=200,null=False,blank=False)
     def __str__(self):
         return self.scname
 

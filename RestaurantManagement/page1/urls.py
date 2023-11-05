@@ -39,6 +39,11 @@ urlpatterns = [
     path('a_view_menu',views.a_view_menu,name="a_view_menu"),
     path('a_add_category',views.a_add_category,name="a_add_category"),
     path('a_edit_menu_item/<int:item_id>/',views.a_edit_menu_item,name="a_edit_menu_item"),
+    path('a_view_subcategory/<int:item_id>/',views.a_view_subcategory,name="a_view_subcategory"),
+    path('a_edit_subcategory/<int:item_id>/',views.a_edit_subcategory,name="a_edit_subcategory"),
+    path('get_category_subcategory_data/', views.get_category_subcategory_data, name='get_category_subcategory_data'),
+    path('a_add_subcategory/<int:item_id>/',views.a_add_subcategory,name="a_add_subcategory"),
+
 
 
     path('reset_password/', auth_views.PasswordResetView.as_view(), name="reset_password"),

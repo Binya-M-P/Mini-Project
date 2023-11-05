@@ -111,7 +111,6 @@
             padding: 5px;
         }
     </style>
-
 </head>
 <body>
     <!-- Sidebar -->
@@ -131,7 +130,7 @@
             {% endif %}
             </h3><br><br>
         </div>
-        <form action="" name="additem" method='POST' enctype="multipart/form-data">
+        <form action="" name="addcategory" method='POST' enctype="multipart/form-data">
             {% csrf_token %}
             <center><b><font size="+1" color="white" border=1px solid black>Add Item</font></b><br></center><br><br>
 
@@ -144,91 +143,16 @@
                 {% endfor %}
             {% endif %}
 
-            <label for="cat">Choose category:</label>
             
-            <select name="cat" id="cat" oninput="">
-                {% for item in category %}
-
-                    <option value={{item.cname}}>{{item.cname}}</option>
-                {% endfor %}
-            </select><br><br>
-
-
-
-            
-
-
-
-
-
-
-
-            <label for="subcat">Choose subcategory:</label>
-<select name="subcat" id="subcat" disabled>
-    <option value="">Select subcategory</option>
-</select><br><br>
-
-
-
             <label for="name">Item name:</label>
-            <input type="text" name="name" id="name" oninput="iname()" Required><br>
-            <p id="ename" style="color: #f7e6b5; font-size:75%"></p>
+            <input type="text" name="name" id="name" value={{subcat.scname}} Required><br>
 
-            <label for="description">description:</label>
-            <input type="text" name="description" id="description" Required><br>
-            <br>
-            <label for="image">Select an Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" Required><br><br>
             
-            <label for="price">Price</label>
-            
-            <input type="number" id="price" name="price" Required><br><br>
 
-            <center><button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button></center>
+            <button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button>
             <br>
         </form>
     </div>
-
-
-    <script>
-        // Get references to the category and subcategory dropdowns
-        var categoryDropdown = document.getElementById('cat');
-        var subcategoryDropdown = document.getElementById('subcat');
-    
-        // Function to update subcategory options based on the selected category
-        function updateSubcategories() {
-            var selectedCategory = categoryDropdown.value;
-            subcategoryDropdown.innerHTML = '<option value="">Select subcategory</option>'; // Reset subcategory dropdown
-    
-            if (selectedCategory) {
-                // Fetch category-subcategory data from your view
-                fetch('/get_category_subcategory_data/')  // Replace with the actual URL
-                    .then(response => response.json())
-                    .then(data => {
-                        var subcategories = data[selectedCategory] || [];
-                        subcategories.forEach(function (subcategory) {
-                            var option = document.createElement('option');
-                            option.value = subcategory;
-                            option.textContent = subcategory;
-                            subcategoryDropdown.appendChild(option);
-                        });
-    
-                        // Enable or disable the subcategory dropdown based on the category selection
-                        subcategoryDropdown.disabled = subcategories.length === 0;
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            }
-        }
-    
-        // Add an event listener to the category dropdown to update subcategories
-        categoryDropdown.addEventListener('change', updateSubcategories);
-    
-        // Initial update when the page loads
-        updateSubcategories();
-    </script>
-    
-
-    
 </body>
 
 

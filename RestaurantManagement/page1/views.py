@@ -1,10 +1,10 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
-from .models import Person,Menutbl,Category
+from .models import Person,Menutbl,Category,Subcategory
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -87,15 +87,15 @@ def signup(request):
 def chome(request):
     #category=Category.objects.filter(status=1)
     # if 'username' in request.session:
-    #     salads=Menutbl.objects.filter(cid=1)
-    #     pizza=Menutbl.objects.filter(cid=2)
-    #     burger=Menutbl.objects.filter(cid=3)
+    #     salads=Menutbl.objects.filter(pk=1)
+    #     pizza=Menutbl.objects.filter(pk=2)
+    #     burger=Menutbl.objects.filter(pk=3)
     #     return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
     # else :
     #     return redirect(loginpage)
-    salads=Menutbl.objects.filter(cid=1)
-    pizza=Menutbl.objects.filter(cid=2)
-    burger=Menutbl.objects.filter(cid=3)
+    salads=Menutbl.objects.filter(pk=1)
+    pizza=Menutbl.objects.filter(pk=2)
+    burger=Menutbl.objects.filter(pk=3)
     return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
 
 
@@ -129,9 +129,9 @@ def logout_user(request):
 
 def adminhome(request):
     #if 'username' in request.session:
-    salads=Menutbl.objects.filter(cid=1)
-    pizza=Menutbl.objects.filter(cid=2)
-    burger=Menutbl.objects.filter(cid=3)
+    salads=Menutbl.objects.filter(pk=1)
+    pizza=Menutbl.objects.filter(pk=2)
+    burger=Menutbl.objects.filter(pk=3)
     return render(request,'adminhome.html',{"salads":salads,"pizza":pizza,"burger":burger})
     #return redirect(loginpage)
 
@@ -241,31 +241,72 @@ def delete_user(request,pk):
 def a_add_items(request):
     if request.method == 'POST':
         categoryn=request.POST.get('cat')
+        subcategory_name = request.POST.get('subcat')
         name=request.POST.get('name')
         description=request.POST.get('description')
         image = request.FILES['image']
         price=request.POST.get('price')
         cat = Category.objects.filter(cname=categoryn).first()
+        subcategory = Subcategory.objects.filter(scname=subcategory_name).first()
+
         
         if Menutbl.objects.filter(name=name).exists():
             messages.info(request,"The item already exists")
             return redirect('a_add_items')
         else:
-            item=Menutbl(cid=cat,name=name,description=description,image=image,price=price)
+            item=Menutbl(cid=cat,sub_category=subcategory,name=name,description=description,image=image,price=price)
             item.save();
             return redirect('a_view_menu')
     else:
         category=Category.objects.all()
-        return render(request,'a_add_items.html',{"category":category})
+        subcategories = Subcategory.objects.all()
+        return render(request, 'a_add_items.html', {"category": category, "subcategories": subcategories})
+    
 
 def a_view_menu(request):
     items=Menutbl.objects.all()
     return render(request,'a_view_menu.html',{"items":items})
 def a_view_category(request):
     categories=Category.objects.all()
+    #subcategory=Subcategory.objects.all()
     return render(request,'a_view_category.html',{"cat":categories})
+
+
+def a_view_subcategory(request,item_id):
+    category = Category.objects.get(pk=item_id)
+    subcats = Subcategory.objects.filter(cid=category)
+    if subcats is not None:
+        return render(request,'a_view_subcategory.html',{"subcats":subcats,"category":category})
+    else:
+        return redirect(a_view_category)
+    
+
+def a_edit_subcategory(request,item_id):
+    
+    subcat = Subcategory.objects.filter(pk=item_id).first()
+    if request.method == 'POST':
+        # print("subcat nokkan",item_id)
+        sn=request.POST.get('name')
+        Subcategory.objects.filter(pk=item_id).update(scname=sn)
+        return redirect(a_view_subcategory)
+    if subcat is not None :
+        return render(request,'a_edit_subcategory.html',{"subcat":subcat})
+    else :
+        return redirect(a_view_subcategory)
+
 def a_add_category(request):
+    
+    if request.method == 'POST':
+        name=request.POST.get('name')
+        if Category.objects.filter(cname=name).exists():
+            messages.info(request,"The item already exists")
+            return redirect('a_add_category')
+        else:
+            item=Category(cname=name)
+            item.save();
+            return redirect('a_view_category')
     return render(request,'a_add_category.html')
+
 
 
 def a_edit_menu_item(request, item_id):
@@ -275,9 +316,9 @@ def a_edit_menu_item(request, item_id):
     if request.method == 'POST':
         categoryn=request.POST.get('catn')
         if categoryn == "" :
-            categoryn=item.cid
+            categoryn=item.pk
         if categoryn is None:
-            categoryn=item.cid
+            categoryn=item.pk
         name=request.POST.get('name')
         if name is None:
             name=item.name
@@ -297,7 +338,7 @@ def a_edit_menu_item(request, item_id):
             price=item.price
         cat = Category.objects.filter(cname=categoryn).first()
         if categoryn != ''and name != '' and description !='' and image !='' and price != '':
-            Menutbl.objects.filter(pk=item.pk).update(cid=cat,name=name,description=description,image=image,price=price)
+            Menutbl.objects.filter(pk=item.pk).update(pk=cat,name=name,description=description,image=image,price=price)
             messages.success(request,"Changes are saved successfully !")
             return redirect('a_edit_menu_item',item.pk)
         else:
@@ -309,3 +350,28 @@ def a_edit_menu_item(request, item_id):
     #     form = MenutblEditForm(instance=item)
     return render(request, 'a_edit_menu_item.html', {'item': item,'category':category})
 
+def get_category_subcategory_data(request):
+    # Query your database to get the category-subcategory data
+    category_subcategory_data = {}
+    categories = Category.objects.all()
+
+    for category in categories:
+        subcategories = Subcategory.objects.filter(cid=category)
+        subcategory_names = [subcategory.scname for subcategory in subcategories]
+        category_subcategory_data[category.cname] = subcategory_names
+
+    return JsonResponse(category_subcategory_data)
+
+def a_add_subcategory(request, item_id):
+    if request.method == 'POST':
+        name=request.POST.get('name')
+        cat = Category.objects.filter(pk=item_id).first()
+        if Subcategory.objects.filter(scname=name,cid=cat).exists():
+            messages.info(request,"The subcategory already exists")
+            #return redirect(a_add_subcategory)
+        else:
+            item=Subcategory(scname=name,cid=cat)
+            item.save();
+            messages.info(request,"The subcategory is added successfully ")
+            #return redirect(a_view_category)
+    return render(request,'a_add_subcategory.html')

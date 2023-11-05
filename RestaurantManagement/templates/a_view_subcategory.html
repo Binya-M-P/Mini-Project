@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -108,9 +114,10 @@
         }
         #logout {
             margin-left: 850px;
-            padding: 5px;
+            padding: 1px;
         }
     </style>
+
 </head>
 <body>
     <!-- Sidebar -->
@@ -130,29 +137,12 @@
             {% endif %}
             </h3><br><br>
         </div>
-        <form action="" name="addcategory" method='POST' enctype="multipart/form-data">
-            {% csrf_token %}
-            <center><b><font size="+1" color="white" border=1px solid black>Add Item</font></b><br></center><br><br>
-
-
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert {{message.tags}} m-2" id="msg" role="alert">
-                        {{message}}
-                    </div>
-                {% endfor %}
-            {% endif %}
-
-            
-            
-            <label for="name">Item name:</label>
-            <input type="text" name="name" id="name" Required><br>
-
-            
-
-            <center><button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button></center>
-            <br>
-        </form>
+        <a href="{% url 'a_add_subcategory' category.pk %}">Add subcategory</a>
+        <h1>Sub categories : </h1>
+        {% for subcat in subcats %}
+        <a href="{% url 'a_edit_subcategory' subcat.pk %}"><ol>{{subcat.pk}}{{subcat.scname}}</ol></a>
+        {% endfor %}
     </div>
 </body>
+
 </html>

@@ -86,8 +86,9 @@
         <table align="center" height="550%" border=2px soid black>
             <tr>
                 
-                <th>Id</th>
+                {% comment %} <th>Id</th> {% endcomment %}
                 <th>Category Name</th>
+                <th>Subcategory</th>
                 {% comment %} <th>Description</th>
                 <th>Image</th>
                 <th>Price</th> {% endcomment %}
@@ -98,9 +99,14 @@
             {% for item in cat %}
             <tr>
                 
-                <td>{{item.cid}}</td>
+                {% comment %} <td>{{item.pk}}</td> {% endcomment %}
                 <td>{{item.cname}}</td>
-                
+                <td>
+                    <form method="post" action="{% url 'a_view_subcategory' item.pk %}" name="scview" id="scview">
+                        {% csrf_token %}
+                        <button type="submit">View Subcategory</button>
+                    </form>
+                </td>
                     
                     <!--<td>{{item.status}}</td>
                     <td><a href="">Edit</a></td>
@@ -108,7 +114,8 @@
                 
             </tr>   
             {% endfor %}
-        </table>      
+        </table>
+        <a href="{% url 'a_add_category' %}">Add category</a>      
     </div>
 </body>
 </html>
