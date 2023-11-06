@@ -111,6 +111,48 @@
             padding: 5px;
         }
     </style>
+    <script>
+        function cnameval()
+            {
+                //alert("enter user");
+                var name=document.getElementById('name').value;
+                var errorMessage=document.getElementById('up');
+
+                var spaceRegex = /^\s*$/;
+
+                const btn=document.getElementById('btn');
+                if(name==null || name=="")
+                {
+                    document.getElementById('up').innerHTML="Category name can't be null"
+                    btn.disabled=true;
+
+                }
+                else if(spaceRegex.test(name)) {
+                    document.getElementById('up').innerHTML="Category name can't be null";
+                    btn.disabled=true;
+                }
+                else if(name.length<3)
+                {
+                    document.getElementById('up').innerHTML='Category name must be at least 3 characters long';
+                    btn.disabled=true;
+                }
+                else if((name.replace(/[^0-9]/g,"").length) > ((name.length)-2))
+                {
+                    document.getElementById('up').innerHTML='Category name must contains at least 2 alphebets';
+                    btn.disabled=true;
+                }
+                else if(name.length >15)
+                {
+                    document.getElementById('up').innerHTML = 'Category name must be less than 15 characters'; // Clear the error message
+                    btn.disabled=true;
+                }
+                else
+                {
+                    document.getElementById('up').innerHTML="";
+                    btn.disabled=false;
+                }
+            }
+    </script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -132,21 +174,31 @@
         </div>
         <form action="" name="addcategory" method='POST' enctype="multipart/form-data">
             {% csrf_token %}
-            <center><b><font size="+1" color="white" border=1px solid black>Add Item</font></b><br></center><br><br>
+            <center><b><font size="+1" color="white" border=1px solid black>Edit Subcategoty</font></b><br></center><br><br>
 
 
             {% if messages %}
-                {% for message in messages %}
-                    <div class="alert {{message.tags}} m-2" id="msg" role="alert">
-                        {{message}}
-                    </div>
-                {% endfor %}
-            {% endif %}
+                        {% for message in messages %}
+                            <div class="messages" id="msg" >
+                                <center><font style="color:white;">{{message}}</font></center>
+                            </div>
+                            <script>
+                                // Add JavaScript to hide the message after 5 seconds
+                                setTimeout(function () {
+                                    var messagesContainer = document.querySelector('.messages');
+                                    if (messagesContainer) {
+                                        messagesContainer.style.display = 'none';
+                                    }
+                                }, 3000); // 5000 milliseconds = 5 seconds
+                            </script>
+                        {% endfor %}
+                        
+                    {% endif %}
 
             
             <label for="name">Item name:</label>
-            <input type="text" name="name" id="name" value={{subcat.scname}} Required><br>
-
+            <input type="text" name="name" id="name" value={{subcat.scname}} oninput="cnameval()" Required><br>
+            <p id="up" style="color: #f7e6b5; font-size:75%"></p>
             
 
             <button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button>

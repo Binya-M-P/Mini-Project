@@ -86,7 +86,7 @@
                 <th>Username</th>
                 <th>Email id</th>
                 <th>Phone number</th>
-                <th>Role Id</th>
+                <th>Role</th>
                 <th></th>
                 <!--<th>Status</th>
                 <th>Edit</th>
@@ -99,7 +99,14 @@
                     <td>{{item.name}}</td>
                     <td>{{item.email}}</td>
                     <td>{{item.phone}}</td>
-                    <td>{{item.role_id}}</td>
+                    {% if item.role_id == 1%}
+                        <td>Customer</td>
+                    {% endif%}
+                    {% if item.role_id == 2%}
+                        <td>Employee</td>
+                    {% endif%}
+                    
+                    {% comment %} <td>{{item.role_id}}</td> {% endcomment %}
                     
                     <!--<td>{{item.status}}</td>
                     <td><a href="">Edit</a></td>

@@ -139,9 +139,14 @@
         </div>
         <a href="{% url 'a_add_subcategory' category.pk %}">Add subcategory</a>
         <h1>Sub categories : </h1>
+        <font size="+2" border=1px solid yellow>
+        <ul style="list-style-type:disc;">
         {% for subcat in subcats %}
-        <a href="{% url 'a_edit_subcategory' subcat.pk %}"><ol>{{subcat.pk}}{{subcat.scname}}</ol></a>
+        
+        <a href="{% url 'a_edit_subcategory' subcat.pk %}"><li>{{subcat.scname}}</li></a>
         {% endfor %}
+    </ul>
+</font>
     </div>
 </body>
 

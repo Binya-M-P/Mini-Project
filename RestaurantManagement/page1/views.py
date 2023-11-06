@@ -93,9 +93,9 @@ def chome(request):
     #     return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
     # else :
     #     return redirect(loginpage)
-    salads=Menutbl.objects.filter(pk=1)
-    pizza=Menutbl.objects.filter(pk=2)
-    burger=Menutbl.objects.filter(pk=3)
+    salads=Menutbl.objects.filter(cid=1)
+    pizza=Menutbl.objects.filter(cid=2)
+    burger=Menutbl.objects.filter(cid=3)
     return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
 
 
@@ -109,17 +109,38 @@ def staffhome(request):
 
 
 
+# def logout_user(request):
+#     # if 'username' in request.session:
+#     #     #session.objects.all().delete()
+#     #     logout(request)
+#     #     request.session.flush()
+#     #     request.session.clear()
+#     #     #del request.session['username']
+#     #     return redirect('loginpage')
+#     #     #return render(request,'loginpage.html')
+#     #     #return render(request,'logout_user.html')
+#     logout(request)
+#     request.session.flush()
+#     request.session.clear()
+#     return render(request,'logout_user.html')
+
+
+#from django.contrib.auth import logout
+
 def logout_user(request):
-    if 'username' in request.session:
-        #session.objects.all().delete()
+    if request.user.is_authenticated:
+        # Log the user out
+        logout(request)
+        # Clear the session
+        request.session.flush()
+        return render(request,'logout_user.html')
+    else:
         logout(request)
         request.session.flush()
-        request.session.clear()
-        #del request.session['username']
-        return redirect('logout_user')
-        #return render(request,'loginpage.html')
-        #return render(request,'logout_user.html')
-    return render(request,'logout_user.html')
+        # Handle the case where the user is not authenticated
+        return render(request,'logout_user.html')
+
+
 
 
     #logout(request)
@@ -288,7 +309,8 @@ def a_edit_subcategory(request,item_id):
         # print("subcat nokkan",item_id)
         sn=request.POST.get('name')
         Subcategory.objects.filter(pk=item_id).update(scname=sn)
-        return redirect(a_view_subcategory)
+        messages.info(request,"The subcategory already exists")
+        #return redirect(a_view_subcategory)
     if subcat is not None :
         return render(request,'a_edit_subcategory.html',{"subcat":subcat})
     else :

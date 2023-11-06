@@ -90,6 +90,17 @@
             font-size:100%;
             color:white;
         }
+        textarea
+        {
+            border: 1px  solid #F3B820;
+            border-radius: 20px;
+            padding: 7px 5px;
+            margin: 2px 0;
+            width:100%;
+            background-color:#343230;
+            font-size:100%;
+            color:white;
+        }
         label
         {
             font-size:100%;
@@ -111,6 +122,128 @@
             padding: 5px;
         }
     </style>
+
+    <script>
+        function iname()
+            {
+                //alert("enter user");
+                var name=document.getElementById('name').value;
+                var errorMessage=document.getElementById('up');
+                var price=document.getElementById('price')
+                var spaceRegex = /^\s*$/;
+
+                const btn=document.getElementById('btn');
+                if(name==null || name=="")
+                {
+                    document.getElementById('up').innerHTML="Item name can't be null"
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if(spaceRegex.test(name)) {
+                    document.getElementById('up').innerHTML="Item name can't be null";
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if(name.length<3)
+                {
+                    document.getElementById('up').innerHTML='Item name must be at least 3 characters long';
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if((name.replace(/[^0-9]/g,"").length) > ((name.length)-2))
+                {
+                    document.getElementById('up').innerHTML='Item name must contains at least 2 alphebets';
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if(name.length >15)
+                {
+                    document.getElementById('up').innerHTML = 'Item name must be less than 15 characters'; // Clear the error message
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else
+                {
+                    document.getElementById('up').innerHTML="";
+                    btn.disabled=false;
+                    price.disabled=false;
+                }
+            }
+        function dval()
+            {
+                //alert("enter user");
+                var dname=document.getElementById('description').value;
+                var errorMessage=document.getElementById('dp');
+                var regex = /^\s*$/;
+                const btn=document.getElementById('btn');
+                var price=document.getElementById('price')
+                if(dname==null || dname=="")
+                {
+                    document.getElementById('dp').innerHTML="Description can't be null"
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if(regex.test(dname)) {
+                    document.getElementById('dp').innerHTML="Description can't be null";
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if(dname.length<10)
+                {
+                    document.getElementById('dp').innerHTML='Description must be at least 10 characters long';
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if((dname.replace(/[^0-9]/g,"").length) > ((dname.length)-2))
+                {
+                    document.getElementById('dp').innerHTML='Description must contains at least 2 alphebets';
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else if(dname.length >100)
+                {
+                    document.getElementById('dp').innerHTML = 'Description must be less than 100 characters'; // Clear the error message
+                    btn.disabled=true;
+                    price.disabled=true;
+                }
+                else
+                {
+                    document.getElementById('dp').innerHTML="";
+                    btn.disabled=false;
+                    price.disabled=false;
+                }
+
+                
+        }    
+        function pval()
+        {
+                var price=document.getElementById('price').value;
+                var errorMessage=document.getElementById('pp');
+                var spaceRegex = /^\s*$/;
+                const btn=document.getElementById('btn');
+                if(price==null || price=="")
+                {
+                    document.getElementById('pp').innerHTML="Price can't be null"
+                    btn.disabled=true;
+                }
+                else if(price<5)
+                {
+                    document.getElementById('pp').innerHTML="Enter a valid price"
+                    btn.disabled=true;
+                }
+                else if(price>1000)
+                {
+                    document.getElementById('pp').innerHTML="Enter a valid price"
+                    btn.disabled=true;
+                }
+                else
+                {
+                    document.getElementById('pp').innerHTML=""
+                    btn.disabled=false;
+                } 
+        }
+
+    </script>
 
 </head>
 <body>
@@ -137,12 +270,22 @@
 
 
             {% if messages %}
-                {% for message in messages %}
-                    <div class="alert {{message.tags}} m-2" id="msg" role="alert">
-                        {{message}}
-                    </div>
-                {% endfor %}
-            {% endif %}
+                        {% for message in messages %}
+                            <div class="messages" id="msg" >
+                                <center><font style="color:white;">{{message}}</font></center>
+                            </div>
+                            <script>
+                                // Add JavaScript to hide the message after 5 seconds
+                                setTimeout(function () {
+                                    var messagesContainer = document.querySelector('.messages');
+                                    if (messagesContainer) {
+                                        messagesContainer.style.display = 'none';
+                                    }
+                                }, 3000); // 5000 milliseconds = 5 seconds
+                            </script>
+                        {% endfor %}
+                        
+                    {% endif %}
 
             <label for="cat">Choose category:</label>
             
@@ -155,34 +298,29 @@
 
 
 
-            
-
-
-
-
-
-
 
             <label for="subcat">Choose subcategory:</label>
-<select name="subcat" id="subcat" disabled>
-    <option value="">Select subcategory</option>
-</select><br><br>
+            <select name="subcat" id="subcat" disabled>
+                <option value="">Select subcategory</option>
+            </select><br><br>
 
 
 
             <label for="name">Item name:</label>
             <input type="text" name="name" id="name" oninput="iname()" Required><br>
-            <p id="ename" style="color: #f7e6b5; font-size:75%"></p>
+            <p id="up" style="color: #f7e6b5; font-size:75%"></p>
 
             <label for="description">description:</label>
-            <input type="text" name="description" id="description" Required><br>
+            <textarea name="description" id="description" rows="4" oninput="dval()" Required></textarea>
+            <p id="dp" style="color: #f7e6b5; font-size:75%"></p>
             <br>
             <label for="image">Select an Image:</label>
             <input type="file" id="image" name="image" accept="image/*" Required><br><br>
             
             <label for="price">Price</label>
             
-            <input type="number" id="price" name="price" Required><br><br>
+            <input type="number" id="price" name="price" oninput="pval()" Required>
+            <p id="pp" style="color: #f7e6b5; font-size:75%"></p>
 
             <center><button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button></center>
             <br>

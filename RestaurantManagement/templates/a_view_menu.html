@@ -94,7 +94,7 @@
                 <th>Price</th>
                 <th>Status</th>
                 <th>Edit</th>
-                <th>Delete</th>
+                <th>Status</th>
             </tr>
             {% for item in items %}
             <tr>
@@ -105,7 +105,12 @@
                 <td>{{item.description}}</td>
                 <td><img src="{{ item.image.url }}" alt="{{ item.name }}" width="10%"></td>
                 <td>{{item.price}}</td>
-                <td>{{item.status}}</td>
+                {% if item.status == 1 %}
+                <td>Active</td>
+                {% endif %}
+                {% if item.status == 0 %}
+                <td>Inactive</td>
+                {% endif %}
                     
                     <!--<td>{{item.status}}</td>
                     <td><a href="">Edit</a></td>
@@ -116,8 +121,7 @@
                         <button type="submit">Edit</button>
                     </form>
                 </td>
-                <td><a href="#">Edit</a></td>
-                <td><a href="#">Delete</a></td>
+                <td><a href="#"></a></td>
 
             </tr>   
             {% endfor %}
