@@ -39,7 +39,7 @@
             margin-left: 250px;
             padding: 20px;
         }
-        table {
+        {% comment %} table {
             width: 50%;
           }
           
@@ -49,7 +49,23 @@
           td {
             height: 40px;
             text-align:center;
+          } {% endcomment %}
+          table {
+            border-collapse: collapse;
+            width: 50%;
           }
+          
+          th, td {
+            text-align: left;
+            padding: 8px;
+          }
+          th
+          {
+            background-color: black;
+            color:white;
+          }
+          tr:nth-child(even) {
+            background-color: #D6EEEE;
     </style>
 </head>
 <body>

@@ -155,6 +155,7 @@
             <div id="salad">
                 <table align="center">
                     {% for item in salads %}
+                    {% if item.status == 1 %}
                         <tr>
                             <td>    
                                 <img src="{{item.image.url}}" width=200px heigth:200px>
@@ -169,6 +170,7 @@
                                 <b>{{item.price}}</b>
                             </td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -176,6 +178,7 @@
             <div class ="piza" id="piza">
                 <table align="center">
                     {% for item in pizza %}
+                    {% if item.status == 1 %}
                         <tr>
                             <td>    
                                 <img src="{{item.image.url}}" width=200px heigth:200px>
@@ -190,6 +193,7 @@
                                 <b>{{item.price}}</b>
                             </td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -197,6 +201,7 @@
             <div class ="brgr" id="brgr">
                 <table align="center" padding="1px">
                     {% for item in burger %}
+                    {% if item.status == 1 %}
                         <tr>
                             <td>    
                                 <img src="{{item.image.url}}" width=220px heigth:200px align="center">
@@ -211,6 +216,7 @@
                                 <b>{{item.price}}</b>
                             </td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>

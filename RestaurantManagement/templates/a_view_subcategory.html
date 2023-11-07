@@ -116,6 +116,29 @@
             margin-left: 850px;
             padding: 1px;
         }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+          }
+          
+          th, td {
+            text-align: left;
+            padding: 8px;
+          }
+          th
+          {
+            background-color: black;
+            color:white;
+          }
+          tr:nth-child(even) {
+            background-color: #D6EEEE;}
+
+        adiv
+        {
+            border: 5px outset red;
+  background-color: lightblue;
+  text-align: center;
+        }
     </style>
 
 </head>
@@ -130,22 +153,31 @@
     <!-- Content area -->
     <div id="content">
         <!-- <h1>Admin</h1> -->
-        <div id="logout">
+        {% comment %} <div id="logout">
             <h3>
             {% if user.is_authenticated %}
                     <a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>
             {% endif %}
             </h3><br><br>
+        </div> {% endcomment %}
+        <div id="adddiv" style="color:blak;font-size:16px;">
+            <a href="{% url 'a_add_subcategory' category.pk %}" id="adiv" style="padding:10px 10px;">Add subcategory</a>
         </div>
-        <a href="{% url 'a_add_subcategory' category.pk %}">Add subcategory</a>
-        <h1>Sub categories : </h1>
+        <center><h1>Sub categories of {{category.cname}}: </h1></center><br>
         <font size="+2" border=1px solid yellow>
-        <ul style="list-style-type:disc;">
-        {% for subcat in subcats %}
+        {% comment %} <ul style="list-style-type:disc;"> {% endcomment %}
+        <table border=1px solid black align="center" width="40%">
         
+        {% for subcat in subcats %}
+        <tr>
+        <td>
         <a href="{% url 'a_edit_subcategory' subcat.pk %}"><li>{{subcat.scname}}</li></a>
+        </td>
+    </tr>
         {% endfor %}
-    </ul>
+    
+    {% comment %} </ul> {% endcomment %}
+</table>
 </font>
     </div>
 </body>

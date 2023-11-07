@@ -43,6 +43,9 @@ urlpatterns = [
     path('a_edit_subcategory/<int:item_id>/',views.a_edit_subcategory,name="a_edit_subcategory"),
     path('get_category_subcategory_data/', views.get_category_subcategory_data, name='get_category_subcategory_data'),
     path('a_add_subcategory/<int:item_id>/',views.a_add_subcategory,name="a_add_subcategory"),
+    path('get_subcategories/', views.get_subcategories, name='get_subcategories'),
+    path('a_status_menu/<int:item_id>/',views.a_status_menu,name="a_status_menu"),
+
 
 
 

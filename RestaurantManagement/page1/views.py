@@ -267,11 +267,12 @@ def a_add_items(request):
         description=request.POST.get('description')
         image = request.FILES['image']
         price=request.POST.get('price')
+        lower_name = name.lower()
         cat = Category.objects.filter(cname=categoryn).first()
         subcategory = Subcategory.objects.filter(scname=subcategory_name).first()
 
         
-        if Menutbl.objects.filter(name=name).exists():
+        if Menutbl.objects.filter(name__iexact=lower_name).exists():
             messages.info(request,"The item already exists")
             return redirect('a_add_items')
         else:
@@ -320,7 +321,8 @@ def a_add_category(request):
     
     if request.method == 'POST':
         name=request.POST.get('name')
-        if Category.objects.filter(cname=name).exists():
+        lower_name = name.lower()
+        if Category.objects.filter(cname__iexact=lower_name).exists():
             messages.info(request,"The item already exists")
             return redirect('a_add_category')
         else:
@@ -334,13 +336,13 @@ def a_add_category(request):
 def a_edit_menu_item(request, item_id):
     item = Menutbl.objects.get(pk=item_id)
     category=Category.objects.all()
-    
+    subcategory = Subcategory.objects.all()
     if request.method == 'POST':
         categoryn=request.POST.get('catn')
         if categoryn == "" :
-            categoryn=item.pk
+            categoryn=item.cid
         if categoryn is None:
-            categoryn=item.pk
+            categoryn=item.cid
         name=request.POST.get('name')
         if name is None:
             name=item.name
@@ -360,7 +362,7 @@ def a_edit_menu_item(request, item_id):
             price=item.price
         cat = Category.objects.filter(cname=categoryn).first()
         if categoryn != ''and name != '' and description !='' and image !='' and price != '':
-            Menutbl.objects.filter(pk=item.pk).update(pk=cat,name=name,description=description,image=image,price=price)
+            Menutbl.objects.filter(pk=item.pk).update(cid=cat,name=name,description=description,image=image,price=price)
             messages.success(request,"Changes are saved successfully !")
             return redirect('a_edit_menu_item',item.pk)
         else:
@@ -370,7 +372,9 @@ def a_edit_menu_item(request, item_id):
         #     return redirect('a_view_menu')
     # else:
     #     form = MenutblEditForm(instance=item)
-    return render(request, 'a_edit_menu_item.html', {'item': item,'category':category})
+    return render(request, 'a_edit_menu_item.html', {'item': item,'category':category, 'subcategory': subcategory})
+
+
 
 def get_category_subcategory_data(request):
     # Query your database to get the category-subcategory data
@@ -385,15 +389,42 @@ def get_category_subcategory_data(request):
     return JsonResponse(category_subcategory_data)
 
 def a_add_subcategory(request, item_id):
+    cat = Category.objects.filter(pk=item_id).first()
+    cid=cat.cid
     if request.method == 'POST':
         name=request.POST.get('name')
+        lower_name = name.lower()
         cat = Category.objects.filter(pk=item_id).first()
-        if Subcategory.objects.filter(scname=name,cid=cat).exists():
+        if Subcategory.objects.filter(scname__iexact=lower_name,cid=cat).exists():
             messages.info(request,"The subcategory already exists")
             #return redirect(a_add_subcategory)
+            return render(request,'a_add_subcategory.html',{"item_id":item_id})
         else:
-            item=Subcategory(scname=name,cid=cat)
-            item.save();
+            itm=Subcategory(scname=name,cid=cat)
+            itm.save();
             messages.info(request,"The subcategory is added successfully ")
-            #return redirect(a_view_category)
-    return render(request,'a_add_subcategory.html')
+            return redirect(a_view_category)
+            #return render(request,'a_view_subcategory.html',{"item_id":cid})
+    else :
+        return render(request,'a_add_subcategory.html',{"item_id":item_id})
+
+def get_subcategories(request):
+    if request.method == 'GET':
+        category_name = request.GET.get('category')
+        subcategories = []
+
+        if category_name:
+            # Query your database to get subcategories based on the selected category
+            # Replace this with the actual query to retrieve subcategories
+            subcategories = [subcat.scname for subcat in Subcategory.objects.filter(cid__cname=category_name)]
+
+        return JsonResponse({'subcategories': subcategories})
+    
+
+def a_status_menu(request,item_id):
+    item = Menutbl.objects.get(pk=item_id)
+    if item.status == True:
+        Menutbl.objects.filter(pk=item_id).update(status=False)
+    else :
+        Menutbl.objects.filter(pk=item_id).update(status=True)
+    return redirect('a_view_menu')

@@ -36,7 +36,7 @@
             margin-left: 250px;
             padding: 20px;
         }
-        table {
+        {% comment %} table {
             width: 100%;
           }
           
@@ -46,7 +46,23 @@
           td {
             height: 40px;
             text-align:center;
+          } {% endcomment %}
+          table {
+            border-collapse: collapse;
+            width: 100%;
           }
+          
+          th, td {
+            text-align: left;
+            padding: 8px;
+          }
+          th
+          {
+            background-color: black;
+            color:white;
+          }
+          tr:nth-child(even) {
+            background-color: #D6EEEE;
     </style>
 </head>
 <body>
@@ -80,6 +96,7 @@
                 
             {% endif %}
         </font>
+
         <table align="center" height="550%" border=2px soid black>
             <tr>
                 
@@ -87,7 +104,8 @@
                 <th>Email id</th>
                 <th>Phone number</th>
                 <th>Role</th>
-                <th></th>
+                <th>Status</th>
+                {% comment %} <th></th> {% endcomment %}
                 <!--<th>Status</th>
                 <th>Edit</th>
                 <th>Delete</th>-->
@@ -105,7 +123,7 @@
                     {% if item.role_id == 2%}
                         <td>Employee</td>
                     {% endif%}
-                    
+                    <td>{{item.status}}</td>
                     {% comment %} <td>{{item.role_id}}</td> {% endcomment %}
                     
                     <!--<td>{{item.status}}</td>

@@ -397,23 +397,67 @@
                     <option value={{citem.cname}}>{{citem.cname}}</option>
                 {% endfor %}
             </select><br><br>
+
+            <label for="subcat">Choose subcategory:</label>
+<select name="subcatn" id="subcatn">
+    <option value="">--select--</option>
+</select><br><br>
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.getElementById('catn');
+        const subcategorySelect = document.getElementById('subcatn');
+    
+        categorySelect.addEventListener('change', function() {
+            const selectedCategory = categorySelect.value;
+    
+            if (selectedCategory) {
+                fetch(`/get_subcategories/?category=${selectedCategory}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        subcategorySelect.innerHTML = ''; // Clear the subcategory dropdown
+                        const subcategories = data.subcategories;
+                        for (const subcategory of subcategories) {
+                            const option = document.createElement('option');
+                            option.value = subcategory;
+                            option.textContent = subcategory;
+                            subcategorySelect.appendChild(option);
+                        }
+                    });
+            } else {
+                subcategorySelect.innerHTML = ''; // Clear the subcategory dropdown when no category is selected
+            }
+        });
+    });
+    </script>
+
+
             <label for="name">Item name:</label>
-            <input type="text" name="name" id="name" value={{item.name}} Required><br>
+            <input type="text" name="name" id="name" value="{{item.name}}" Required><br>
             <p id="ename" style="color: #f7e6b5; font-size:75%"></p>
 
             <label for="description">description:</label>
-            <input type="text" name="description" id="description" value={{item.description}} Required><br>
+            <input type="text" name="description" id="description" value="{{ item.description|safe }}" Required><br>
             <br>
             <label for="eimage">Select an Image:</label>
-            <input type="file" name="eimage" accept="image/*" Required><br><br>
+            <input type="file" name="eimage" accept="image/*" ><br><br>
             
             <label for="price">Price</label>
             
-            <input type="number" id="price" name="price" value={{item.price}} Required><br><br>
+            <input type="number" id="price" name="price" value="{{item.price}}" Required><br><br>
 
             <center><button type="submit" name="btn" id="btn"><font style="color:black;">Save</font></button></center>
             <br>
         </form>
     </div>
+
+
+        
+
 </body>
+
+
 </html>
