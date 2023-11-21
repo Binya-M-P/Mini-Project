@@ -58,11 +58,11 @@
           }
           th
           {
-            background-color: black;
-            color:white;
+            background-color: #343230;
+            color:#F3B820;
           }
           tr:nth-child(even) {
-            background-color: #D6EEEE;
+            background-color: #e0e0e0;
     </style>
 </head>
 <body>
@@ -123,7 +123,8 @@
                     {% if item.role_id == 2%}
                         <td>Employee</td>
                     {% endif%}
-                    <td>{{item.status}}</td>
+                    {% if item.status == 1 %}<td>Active</td>{% endif %}
+                    {% if item.status == 0 %}<td>{{item.status}}</td>{% endif %}
                     {% comment %} <td>{{item.role_id}}</td> {% endcomment %}
                     
                     <!--<td>{{item.status}}</td>

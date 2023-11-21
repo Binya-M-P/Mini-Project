@@ -156,9 +156,9 @@
                     btn.disabled=true;
                     price.disabled=true;
                 }
-                else if(name.length >15)
+                else if(name.length >50)
                 {
-                    document.getElementById('up').innerHTML = 'Item name must be less than 15 characters'; // Clear the error message
+                    document.getElementById('up').innerHTML = 'Item name must be less than 25 characters'; // Clear the error message
                     btn.disabled=true;
                     price.disabled=true;
                 }
@@ -200,7 +200,7 @@
                     btn.disabled=true;
                     price.disabled=true;
                 }
-                else if(dname.length >100)
+                else if(dname.length >200)
                 {
                     document.getElementById('dp').innerHTML = 'Description must be less than 100 characters'; // Clear the error message
                     btn.disabled=true;
@@ -242,6 +242,29 @@
                     btn.disabled=false;
                 } 
         }
+        function validateFile() {
+            var fileInput = document.getElementById('image');
+            var fileError = document.getElementById('fileError');
+        
+            // Check if a file is selected
+            if (fileInput.files.length === 0) {
+                fileError.innerHTML = 'Please select an image file.';
+                fileInput.setCustomValidity('Please select an image file.');
+            } else {
+                // Get the file type
+                var fileType = fileInput.files[0].type;
+        
+                // Check if the file type is an image
+                if (fileType.startsWith('image/')) {
+                    fileError.innerHTML = '';
+                    fileInput.setCustomValidity('');
+                } else {
+                    fileError.innerHTML = 'Invalid file type. Please select an image file.';
+                    fileInput.setCustomValidity('Invalid file type. Please select an image file.');
+                }
+            }
+        }
+
 
     </script>
 
@@ -291,7 +314,6 @@
             
             <select name="cat" id="cat" oninput="">
                 {% for item in category %}
-
                     <option value="{{item.cname}}">{{item.cname}}</option>
                 {% endfor %}
             </select><br><br>
@@ -315,9 +337,10 @@
             <p id="dp" style="color: #f7e6b5; font-size:75%"></p>
             <br>
             <label for="image">Select an Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" Required><br><br>
+            <input type="file" id="image" name="image" accept="image/*" onchange="validateFile()" Required><br>
+            <p id="fileError" style="color: #f7e6b5; font-size: 75%;"></p><br>
             
-            <label for="price">Price</label>
+            <label for="price">Price(Rupees)</label>
             
             <input type="number" id="price" name="price" oninput="pval()" Required>
             <p id="pp" style="color: #f7e6b5; font-size:75%"></p>

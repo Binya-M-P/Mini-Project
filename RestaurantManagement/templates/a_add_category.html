@@ -141,9 +141,9 @@
                     document.getElementById('up').innerHTML='Category name must contains at least 2 alphebets';
                     btn.disabled=true;
                 }
-                else if(name.length >15)
+                else if(name.length >25)
                 {
-                    document.getElementById('up').innerHTML = 'Category name must be less than 15 characters'; // Clear the error message
+                    document.getElementById('up').innerHTML = 'Category name must be less than 25 characters'; // Clear the error message
                     btn.disabled=true;
                 }
                 else
@@ -178,22 +178,23 @@
 
 
             {% if messages %}
-                        {% for message in messages %}
-                            <div class="messages" id="msg" >
-                                <center><font style="color:white;">{{message}}</font></center>
-                            </div>
-                            <script>
-                                // Add JavaScript to hide the message after 5 seconds
-                                setTimeout(function () {
-                                    var messagesContainer = document.querySelector('.messages');
-                                    if (messagesContainer) {
-                                        messagesContainer.style.display = 'none';
-                                    }
-                                }, 3000); // 5000 milliseconds = 5 seconds
-                            </script>
-                        {% endfor %}
-                        
-                    {% endif %}
+                {% for message in messages %}
+                    <div class="messages" id="msg" >
+                        <center><font style="color:white;">{{message}}</font></center>
+                    </div>
+                    <script>
+                        // Add JavaScript to hide the message after 5 seconds
+                        setTimeout(function () 
+                        {
+                            var messagesContainer = document.querySelector('.messages');
+                            if (messagesContainer) 
+                            {
+                                messagesContainer.style.display = 'none';                                  
+                            }
+                        }, 3000); // 5000 milliseconds = 5 seconds   
+                    </script>
+                {% endfor %}     
+            {% endif %}
             
             
             <label for="name">Item name:</label>

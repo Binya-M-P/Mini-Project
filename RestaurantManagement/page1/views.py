@@ -7,6 +7,7 @@ from django.urls import reverse
 from .models import Person,Menutbl,Category,Subcategory
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
+from django.db import models
 # Create your views here.
 def index(request):
     return render(request,'index.html')
@@ -17,9 +18,10 @@ def menu(request):
 
 #@cache_control(no_cash=True,must_validate=True,no_store=True)
 def loginpage(request):
-    #if 'username' in request.session:
-        #return render(request,'chome')
-        #return render(request,'chome.html')
+    # if 'username' in request.session:
+    #     print("withemailenter")
+    #     return render(request,'chome')
+    #     #return render(request,'chome.html')
     if request.method == 'POST':
         email=request.POST['username']
         password= request.POST['password']
@@ -38,8 +40,12 @@ def loginpage(request):
             request.session.save()
             if (p.role_id==1):
                 login(request, user)
+                subcategory=Subcategory.objects.all()
+                category=Category.objects.all()
+                menu=Menutbl.objects.all()
                 #return render(request,'chome.html')
                 return redirect('chome')
+                #return render(request,'chome.html',{'subcategory':subcategory,'category':category,'menu':menu})
             elif(p.role_id==2):
                 login(request, user)
                 return render(request,'staffhome.html')
@@ -48,7 +54,7 @@ def loginpage(request):
                 return render(request,'adminhome.html')
             else:
                 #return render(request,'chome.html')
-                return render(request,'loginpage.html')
+                return render(request,'chome.html')
         else:
             messages.error(request,"Invalid Username or password")
             return redirect('loginpage')
@@ -84,19 +90,21 @@ def signup(request):
         return render(request,'signup.html')
 
 @login_required
+@cache_control(no_cash=True,must_validate=True,no_store=True)
 def chome(request):
     #category=Category.objects.filter(status=1)
-    # if 'username' in request.session:
-    #     salads=Menutbl.objects.filter(pk=1)
-    #     pizza=Menutbl.objects.filter(pk=2)
-    #     burger=Menutbl.objects.filter(pk=3)
-    #     return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
-    # else :
-    #     return redirect(loginpage)
-    salads=Menutbl.objects.filter(cid=1)
-    pizza=Menutbl.objects.filter(cid=2)
-    burger=Menutbl.objects.filter(cid=3)
-    return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
+    if 'username' in request.session:
+        subcategory=Subcategory.objects.all()
+        category=Category.objects.all()
+        menu=Menutbl.objects.all()
+        #return render(request,'chome.html')
+        return render(request,'chome.html',{'subcategory':subcategory,'category':category,'menu':menu})
+    else :
+        return render(request,'lognpage.html')
+    # salads=Menutbl.objects.filter(cid=1)
+    # pizza=Menutbl.objects.filter(cid=2)
+    # burger=Menutbl.objects.filter(cid=3)
+    # return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
 
 
 
@@ -133,7 +141,10 @@ def logout_user(request):
         logout(request)
         # Clear the session
         request.session.flush()
-        return render(request,'logout_user.html')
+        request.session.clear()
+        #del request.session['username']
+        return render(request,'loginpage.html')
+        #return redirect('loginpage')
     else:
         logout(request)
         request.session.flush()
@@ -200,7 +211,10 @@ def a_view_person(request):
 
 
 def customerprofile(request):
+
     user_profile = Person.objects.get(name=request.user)
+    if user_profile is None:
+        return redirect('loginpage')
     if request.method == 'POST':
         username=request.POST.get('username')
         email=request.POST.get('email')
@@ -288,6 +302,8 @@ def a_add_items(request):
 def a_view_menu(request):
     items=Menutbl.objects.all()
     return render(request,'a_view_menu.html',{"items":items})
+
+
 def a_view_category(request):
     categories=Category.objects.all()
     #subcategory=Subcategory.objects.all()
@@ -309,8 +325,15 @@ def a_edit_subcategory(request,item_id):
     if request.method == 'POST':
         # print("subcat nokkan",item_id)
         sn=request.POST.get('name')
-        Subcategory.objects.filter(pk=item_id).update(scname=sn)
-        messages.info(request,"The subcategory already exists")
+
+        lower_name = sn.lower()
+        if Subcategory.objects.filter(scname__iexact=lower_name).exists():
+            messages.info(request,"The subcategory already exists")
+        else :
+            Subcategory.objects.filter(pk=item_id).update(scname=sn)
+            messages.info(request,"The subcategory Edited Successfully")
+
+        
         #return redirect(a_view_subcategory)
     if subcat is not None :
         return render(request,'a_edit_subcategory.html',{"subcat":subcat})
@@ -428,3 +451,47 @@ def a_status_menu(request,item_id):
     else :
         Menutbl.objects.filter(pk=item_id).update(status=True)
     return redirect('a_view_menu')
+
+
+def a_edit_category(request,item_id):
+    category = Category.objects.get(cid=item_id)
+    if request.method == 'POST':
+        # print("subcat nokkan",item_id)
+        name=request.POST.get('name')
+        lower_name = name.lower()
+        if name is not None:
+            
+        
+            if Category.objects.filter(cname__iexact=lower_name).exists():
+                messages.info(request,"The Category already exists")
+            else:
+                Category.objects.filter(cid=item_id).update(cname=name)
+                messages.info(request,"The category name edited successfully")
+                return redirect('a_view_category')
+        #return redirect(a_view_subcategory)
+    return render(request,'a_edit_category.html',{'category':category})
+
+def a_status_category(request,item_id):
+    item = Category.objects.get(pk=item_id)
+    if item.status == True:
+        Category.objects.filter(pk=item_id).update(status=False)
+    else :
+        Category.objects.filter(pk=item_id).update(status=True)
+    return redirect('a_view_category')
+
+
+def a_search_menu(request):
+    query = request.GET.get('q', '')
+    try:
+        # Attempt to convert the query to a float, indicating a price search
+        price_query = float(query)
+        items = Menutbl.objects.filter(price=price_query)
+    except ValueError:
+        # If conversion to float fails, perform a text-based search by name, category, and subcategory
+        items = Menutbl.objects.filter(
+            models.Q(name__icontains=query) |
+            models.Q(cid__cname__icontains=query) |  # Search by category name
+            models.Q(sub_category__scname__icontains=query)  # Search by subcategory name
+        )
+
+    return render(request, 'a_view_menu.html', {'items': items, 'search_query': query})
