@@ -48,6 +48,15 @@ urlpatterns = [
     path('a_edit_category/<int:item_id>/',views.a_edit_category,name="a_edit_category"),
     path('a_status_category/<int:item_id>/',views.a_status_category,name="a_status_category"),
     path('a_search_menu/', views.a_search_menu, name='a_search_menu'),
+    path('c_cart_view/', views.c_cart_view, name='c_cart_view'),
+    path('c_add_to_cart/<int:item_id>', views.c_add_to_cart, name='c_add_to_cart'),
+    path('c_update_cart/<int:item_id>', views.c_update_cart, name='c_update_cart'),
+    path('s_profile', views.s_profile, name='s_profile'),
+    path('s_view_orders', views.s_view_orders, name='s_view_orders'),
+    path('add_to_order', views.add_to_order, name='add_to_order'),
+
+
+
 
 
 

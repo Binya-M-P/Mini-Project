@@ -1,0 +1,5 @@
+<h1>Staff Order View</h1>
+
+{% for order_item in ordered_items %}
+    <p>{{ order_item.item.name }} - Quantity: {{ order_item.quantity }}</p>
+{% endfor %}

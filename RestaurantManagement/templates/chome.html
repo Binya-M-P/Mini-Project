@@ -509,21 +509,7 @@
 				  1px -1px 0 #F3B820,
 				  -1px -1px 0 #F3B820; 
             }
-            header
-            {
-                top: 0;
-                position: sticky;
-                background-size: cover;
-                background-color: black;
-                float:right;
-                width:100%
-                
-            }
-            h4
-            {
-                word-spacing: 30px;
-                font-size: 30px;
-            }
+            
             td
             {
                 padding:6px
@@ -578,39 +564,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
     </head>
     <body>
-        <script>
-            if (window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.href);
-                //alert("Enter")
-            }
-        </script>
-        <header>
-            <h3>HOME     ABOUT    SERVICE     MENU   CART  CONTACT  
-                <a href="{% url 'customerprofile' %}"><font size="+1" color="#F3B820">PROFILE</font></a>
-                
-                <!--<div class="dropdown">
-                    <button class="dropbtn"><font size="+1" color="#F3B820">PROFILE  </font></button>
-                    <div class="dropdown-content">
-                        <a href="{% url 'customerprofile' %}"><font size="+1" color="#F3B820">Edit</a>
-                        <a href="{% url 'changepassword' %}"><font size="+1" color="#F3B820">Change Password</font></a>
-                    </div>
-                </div>-->
-
-
-
-            
-            {% if user.is_authenticated %}
-            
-                {% csrf_token %}
-                <a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>
-            
-                <!--<a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>-->
-            {% endif %}
-            
-        </h3>
-        </header>
+        {% include 'c_header.html' %}
 
         
         <div class="div1">
@@ -623,15 +583,16 @@
             <br><br><br><br><br><br><br><br><br><br><br>
             
         </div>
-        <div class="menu">
-
-
-            <center><h4>{% for i in category%}{% if i.status == 1%}{{i.cname}}   {% endif %}{% endfor %}<h4></center>
+        <div class="menu" id="menu">
             
+
+<br>
+            <center><font size="+4" color="black">{% for i in category%}{% if i.status == 1%} <a href="javascript:void(0);" onclick="scrollToSection('{{ i.cname }}')" style="color: black">{{ i.cname }}&nbsp;</a>{% endif %}{% endfor %}</font></center>
+                    {% csrf_token %}
                 <table align="center">
                     {% for i in category %}
                         {% if i.status == 1 %}
-                            <tr><td><font size="+4">{{i.cname}}</font></tr></td>
+                            <tr><td><font size="+4" id="{{ i.cname }}">{{i.cname}}</font></tr></td>
                             {% for k in subcategory %}
                 
                                 {% if k.cid == i %}
@@ -640,16 +601,27 @@
                                         {% if j.sub_category == k %}{% if j.status == 1  %}
                                             <tr>
                                                 <td>    
-                                                    <img src="{{j.image.url}}" class="fixed-size-image">
+                                                    <img src="{{j.image.url}}" class="fixed-size-image" onclick"test()">
                                                 </td>
                                                 <td width="350px">
-                                                    <h5>{{j.name}}<br></h5>
-                                                    {% comment %} {{j.description}} {% endcomment %}
+                                                    <h5>{{j.name}}</h5>
+                                                    <font size="-1"><i> {{j.description}}</i></font>
+
                                                 </td>
                                                 
                                                 <td>
                                                     <b>{{j.price}}</b>
+                                                    <br>
+
+                                                    <form method="post" action="{% url 'c_add_to_cart' j.pk %}" name="disableitem" id="disableitem">
+                                                        {% csrf_token %}
+                                                        <button type="submit" name="btn" id="btn">Add to Cart</button>
+                                                    </form>
+
+                                                    
                                                 </td>
+
+
                                             </tr>
                                         {% endif %}{% endif %}
                                     {% endfor %}
@@ -659,9 +631,23 @@
                     {% endfor %}</center>
                 </table>
             </div>
-
+            <script>
+                function scrollToSection(sectionId) {
+                    var element = document.getElementById(sectionId);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            </script>
         </div>
         <script src="" async defer></script>
+
+
+       
+  
+
+
+
     </body>
 
     
