@@ -1,5 +1,14 @@
+{% comment %} {% include 's_header.html' %} 
+        {% include 's_sidebar.html' %} <br><br><br><br><br> {% endcomment %}
+
 <h1>Staff Order View</h1>
 
-{% for order_item in ordered_items %}
-    <p>{{ order_item.item.name }} - Quantity: {{ order_item.quantity }}</p>
+{% for order in orders %}
+    Order<br>
+    {% for cart in carts %}
+        {% if cart.order_id == order %}
+            {{cart.item.name}}&nbsp;{{cart.quantity}}
+        {% endif %}<br><br>
+    {% endfor %}
+
 {% endfor %}

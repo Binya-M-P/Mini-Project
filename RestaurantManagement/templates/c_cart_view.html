@@ -111,7 +111,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
     </head>
-    <body>
+<body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -122,25 +122,25 @@
 
         {% include 'c_header.html' %} 
  <table align="center">
-    {% for item in items %}
+    {% for cartitem in items %}
         
         <tr>
             <td>    
-                <img src="{{item.item_id.image.url}}" class="fixed-size-image">
+                <img src="{{cartitem.item.image.url}}" class="fixed-size-image">
             </td>
             <td width="350px">
-                <h5>{{item.item_id.name}}<br></h5>
+                <h5>{{cartitem.item.name}}<br></h5>
             </td>
                                 
             <td>
-                <b>{{item.price}}</b>
+                <b>{{cartitem.price}}</b>
             </td>
             <td>
 
-                <form method="post" action="{% url 'c_update_cart' item.id %}">
+                <form method="post" action="{% url 'c_update_cart' cartitem.id %}">
                     {% csrf_token %}
                     <button type="submit" name="action" value="decrease">-</button>
-                    <input type="integer" name="quantity" value="{{ item.quantity }}" min="1" style="width: 20px; text-align:center" disabled>
+                    <input type="integer" name="quantity" value="{{ cartitem.quantity }}" min="1" style="width: 20px; text-align:center" disabled>
                     <button type="submit" name="action" value="increase">+</button>
                 </form>
 
@@ -150,7 +150,7 @@
 </table>
 <form method="post" action="{% url 'add_to_order'%}">
                     {% csrf_token %}
-                    <button type="submit" name="add" value="add">Add</button>
+                    <button type="submit" name="add" value="add">Order</button>
                     
                 </form>
 
