@@ -580,9 +580,15 @@ def add_to_order(request):
 
 
 def c_order_view(request):
-    # ordered_items=Cart.objects.filter(customer_id=request.user,ordered=True,paid=False)
-    ordered_items=Cart.objects.all()
-    return render(request,'c_order_view.html',{"ordered_items":ordered_items})
+    ordered_items=Cart.objects.filter(customer_id=request.user,ordered=True,paid=False)
+    oneitem=Cart.objects.filter(customer_id=request.user,ordered=True,paid=False).first()
+    if oneitem is not None:
+        prepared=oneitem.prepared
+        delivered=oneitem.delivered
+    else:
+        prepared=False
+        delivered=False
+    return render(request,'c_order_view.html',{"ordered_items":ordered_items,"prepared":prepared,"delivered":delivered})
 
 
 
@@ -613,32 +619,37 @@ def s_profile(request):
             messages.error(request,"Updation failed !")
     else: 
         return render(request, 's_profile.html', {'user_profile': user_profile})
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def s_view_orders(request):
-    orders=Order.objects.filter(old=False,status=True)
-    carts=Cart.objects.filter(ordered=True,paid=False)
+    orders=Order.objects.filter(old=False,status=True,delivered=False)
+    carts=Cart.objects.filter(ordered=True)
     return render(request,'s_view_orders.html', {'orders': orders,'carts':carts})
+
+
+def ordered_to_prepared(request,item_id):
+    cart=Cart.objects.get(pk=item_id)
+    Cart.objects.filter(pk=item_id).update(prepared=True)
+    return redirect('s_view_orders')
+
+def prepared_to_ready_to_deliver(request,item_id):
+    cart=Cart.objects.get(pk=item_id)
+    Cart.objects.filter(pk=item_id).update(ready_to_deliver=True)
+    order_id=cart.order_id.pk
+    #order=Order.objects.filter(pk=order_id)
+    ordered_items_in_cart=Cart.objects.filter(order_id=order_id)
+    finished=1
+    for ord in ordered_items_in_cart:
+        if ord.ready_to_deliver is False:
+            finished=0
+    if finished == 1:
+        Order.objects.filter(pk=order_id).update(ready_to_deliver=True)
+    return redirect('s_view_orders')
+
+def deliver_order(request,order_id):
+    Order.objects.filter(pk=order_id).update(delivered=True)
+    order=Order.objects.filter(pk=order_id)
+    order=Order.objects.get(pk=order_id)
+    if order.paid_status is True:
+        Order.objects.filter(pk=order_id).update(old=True)
+    Cart.objects.filter(order_id=order).update(delivered=True)
+    return redirect('s_view_orders')

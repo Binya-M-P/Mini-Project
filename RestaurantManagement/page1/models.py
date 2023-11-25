@@ -63,6 +63,8 @@ class Order(models.Model):
     price=models.FloatField(null=False,blank=False,default=0)
     status=models.BooleanField(default=False)
     old=models.BooleanField(default=False)
+    ready_to_deliver=models.BooleanField(default=False)
+    delivered=models.BooleanField(default=False)
     paid_status=models.BooleanField(default=False)
 
     def __int__(self):
@@ -80,6 +82,7 @@ class Cart(models.Model):
     incart=models.BooleanField(default=False)
     ordered=models.BooleanField(default=False)
     prepared=models.BooleanField(default=False)
+    ready_to_deliver=models.BooleanField(default=False)
     delivered=models.BooleanField(default=False)
     paid=models.BooleanField(default=False)
     def __int__(self):

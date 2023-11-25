@@ -55,6 +55,9 @@ urlpatterns = [
     path('s_view_orders', views.s_view_orders, name='s_view_orders'),
     path('add_to_order', views.add_to_order, name='add_to_order'),
     path('c_order_view', views.c_order_view, name='c_order_view'),
+    path('ordered_to_prepared/<int:item_id>', views.ordered_to_prepared, name='ordered_to_prepared'),
+    path('prepared_to_ready_to_deliver/<int:item_id>', views.prepared_to_ready_to_deliver, name='prepared_to_ready_to_deliver'),
+    path('deliver_order/<int:order_id>', views.deliver_order, name='deliver_order'),
 
 
 
