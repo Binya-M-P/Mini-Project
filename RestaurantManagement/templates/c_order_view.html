@@ -10,6 +10,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
+
         <style>
             .div1
             {
@@ -106,60 +107,108 @@
                 width: 150px; /* Set your desired width */
                 height: 100px; /* Set your desired height */
             }
+
+
+            .custom-container {
+                /* Add your custom styles for the image containers here */
+                margin: 10px; /* Example: Add margin */
+                border: 1px solid #ccc; /* Example: Add border */
+                padding: 15px; /* Example: Add padding */
+            }
+
+
+            body {
+                
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+    
+            .container {
+                width: 80%;
+                margin: 20px auto;
+                overflow: hidden;
+            }
+    
+            .image-container {
+                width: 23%; /* Adjust the width as needed */
+                float: left;
+                margin: 10px;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                text-align: center;
+                padding: 10px;
+                border-radius: 5px;
+            }
+    
+            .image-container img {
+                width: 150px; /* Set your desired width */
+                height: 150px;
+                border-radius: 50%; /* Make the image circular, adjust as needed */
+            }
+    
+            .image-container p {
+                margin: 10px 0;
+                color: #333;
+            }
         </style>
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
+        <!-- Add this link to your HTML file -->
+        {% comment %} <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> {% endcomment %}
+
     </head>
-<body>
+    <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         
-        <script src="" async defer></script>
+        {% include 'c_header.html' %}
 
 
+        {% if not ordered_items%}
+        <br><br><br><br><br><br><br><br><br><br><br><h1><center>YOUR CART IS EMPTY !</center></h1>
+    {% endif %}
+    {% if ordered_items %}
 
-        {% include 'c_header.html' %} 
-
-        {% if not items%}
-            <br><br><br><br><br><br><br><br><br><br><br><h1><center>YOUR CART IS EMPTY !</center></h1>
-        {% endif %}
-        {% if items %}
-
- <table align="center">
-    {% for cartitem in items %}
-        
-        <tr>
-            <td>    
-                <img src="{{cartitem.item.image.url}}" class="fixed-size-image">
-            </td>
-            <td width="350px">
-                <h5>{{cartitem.item.name}}<br></h5>
-            </td>
-                                
-            <td>
-                <b>{{cartitem.price}}</b>
-            </td>
-            <td>
-
-                <form method="post" action="{% url 'c_update_cart' cartitem.id %}">
-                    {% csrf_token %}
-                    <button type="submit" name="action" value="decrease">-</button>
-                    <input type="integer" name="quantity" value="{{ cartitem.quantity }}" min="1" style="width: 20px; text-align:center" disabled>
-                    <button type="submit" name="action" value="increase">+</button>
-                </form>
-                
-            </td>
-        </tr>
-    {% endfor %}<tr><td></td><td align="right"><font size="+2" align="right">Total Amount : </font></td><td><font size="+2">{{p}}</font></td></tr></center>
-</table>
-<form method="post" action="{% url 'add_to_order'%}">
-    {% csrf_token %}
-    <button type="submit" name="add" value="add">Order</button>    
-</form>
-{% endif %}
-    </body>
-
+{% comment %} <table align="center">
+{% for ordered_item in ordered_items %}
     
+    <tr>
+        <td>    
+            <img src="{{ordered_item.item.image.url}}" class="fixed-size-image">
+        </td>
+        <td width="200px">
+            Name of item : {{ordered_item.item.name}}<br><br>
+            Quantity : {{ordered_item.quantity}}
+        </td>
+        <td>
+            
+        </td>
+    </tr>
+{% endfor %}<tr><td></td><td align="right">
+</table> {% endcomment %}
+
+
+<div class="container">
+        {% for ordered_item in ordered_items %}
+        <!-- Container 1 -->
+        <div class="image-container">
+            <img src="{{ordered_item.item.image.url}}" alt="Image 1">
+            <p>Name of item : {{ordered_item.item.name}}<br>
+            Quantity : {{ordered_item.quantity}}</p>
+        </div>
+        {% endfor %}
+    
+
+</div> <!-- End of container -->
+
+{% endif %}
+
+
+        <script src="" async defer></script>
+    </body>
 </html>

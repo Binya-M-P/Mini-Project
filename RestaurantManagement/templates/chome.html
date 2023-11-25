@@ -560,6 +560,53 @@
                 width: 200px; /* Set your desired width */
                 height: 150px; /* Set your desired height */
             }
+
+
+
+
+            body {
+                
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+    
+            .container {
+                margin: auto;
+                width: 80%;
+                padding: 10px;
+                overflow: hidden; 
+                
+                
+  {% comment %} margin: auto;
+  width: 70%;
+  padding: 10px;
+  overflow: hidden; {% endcomment %}
+            }
+    
+            .image-container {
+                width: 23%; /* Adjust the width as needed */
+                float: left;
+                margin: 10px;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                text-align: center;
+                padding: 10px;
+                border-radius: 5px;
+
+            }
+    
+            .image-container img {
+                width: 150px; /* Set your desired width */
+                height: 150px;
+                border-radius: 50%; /* Make the image circular, adjust as needed */
+            }
+    
+            .image-container p {
+                margin: 10px 0;
+                color: #333;
+            }
         </style>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -583,11 +630,11 @@
             <br><br><br><br><br><br><br><br><br><br><br>
             
         </div>
-        <div class="menu" id="menu">
+        <div class="menu" id="menu"></div>
             
 
 <br>
-            <center><font size="+4" color="black">{% for i in category%}{% if i.status == 1%} <a href="javascript:void(0);" onclick="scrollToSection('{{ i.cname }}')" style="color: black">{{ i.cname }}&nbsp;</a>{% endif %}{% endfor %}</font></center>
+            {% comment %} <center><font size="+4" color="black">{% for i in category%}{% if i.status == 1%} <a href="javascript:void(0);" onclick="scrollToSection('{{ i.cname }}')" style="color: black">{{ i.cname }}&nbsp;</a>{% endif %}{% endfor %}</font></center>
                     {% csrf_token %}
                 <table align="center">
                     {% for i in category %}
@@ -640,11 +687,74 @@
                 }
             </script>
         </div>
-        <script src="" async defer></script>
+        <script src="" async defer></script> {% endcomment %}
 
 
        
   
+
+
+
+
+
+
+
+
+
+
+        <div class="menu" id="menu">
+            
+
+            <br>
+                        <center><font size="+4" color="black">{% for i in category%}{% if i.status == 1%} <a href="javascript:void(0);" onclick="scrollToSection('{{ i.cname }}')" style="color: black">{{ i.cname }}&nbsp;</a>{% endif %}{% endfor %}</font>
+                                {% csrf_token %}
+                                <br><br>
+                                {% for i in category %}
+                                    {% if i.status == 1 %}
+                                        <font size="+4" id="{{ i.cname }}">{{i.cname}}</font>
+                                        {% for k in subcategory %}
+                            
+                                            {% if k.cid == i %}
+                                                <h5>{{k.scname}}</h5><br>
+                                                <div class="container">
+                                                {% for j in menu %}
+                                                    {% if j.sub_category == k %}{% if j.status == 1  %}
+                                                        <!-- Container 1 -->
+                                                        <div class="image-container">
+                                                            <img src="{{j.image.url}}" alt="Image 1">
+                                                            <p><h5>{{j.name}}</h5>
+                                                                <b>{{j.price}}</b>
+                                                                <form method="post" action="{% url 'c_add_to_cart' j.pk %}" name="disableitem" id="disableitem">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" name="btn" id="btn">Add to Cart</button>
+                                                                </form>
+            
+                                                            </p>
+                                                        </div>
+                                                        
+                                                    
+                                                
+                                                
+
+
+            
+                                                    {% endif %}{% endif %}
+                                                {% endfor %}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}</center>
+                            </table>
+                        </div>
+                        <script>
+                            function scrollToSection(sectionId) {
+                                var element = document.getElementById(sectionId);
+                                if (element) {
+                                    element.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }
+                        </script>
+                    </div>
 
 
 

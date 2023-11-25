@@ -54,6 +54,7 @@ urlpatterns = [
     path('s_profile', views.s_profile, name='s_profile'),
     path('s_view_orders', views.s_view_orders, name='s_view_orders'),
     path('add_to_order', views.add_to_order, name='add_to_order'),
+    path('c_order_view', views.c_order_view, name='c_order_view'),
 
 
 

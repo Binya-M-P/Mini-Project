@@ -54,9 +54,9 @@ def loginpage(request):
             elif(p.role_id==3):
                 login(request, user)
                 return render(request,'adminhome.html')
-            # else:
-            #     return redirect('chome')
-            # #     #return render(request,'chome.html')
+            else:
+                return redirect('chome')
+                #return render(request,'chome.html')
         else:
             messages.error(request,"Invalid Username or password")
             return redirect('loginpage')
@@ -520,54 +520,15 @@ def c_add_to_cart(request,item_id):
         item = Menutbl.objects.get(pk=item_id)
         user = User.objects.get(username=request.user)
         price=item.price
-        try:
-            isinorder=Order.objects.get(customer_id=user,paid_status=False)
-            if isinorder is None:
-                neworder=Order.objects.create(customer_id=user)
-                neworder.save()
-                cart=Cart.objects.create(customer_id=user,order_id=neworder,item=item,price=price,quantity=1)
-                cart.save()
-                # if cart is not None:
-                #     cart.quantity += 1
-                #     cart.price =cart_item.price+price
-                #     cart.save()
-            if isinorder is not None:
-                cart_item,created = Cart.objects.get_or_create(customer_id=user,order_id=isinorder,item=item,price=price)
-                if cart_item is not None:
-                    cart_item.quantity += 1
-                    cart_item.price =cart_item.price+price
-                    cart_item.save()
-                    messages.info(request,"Added to the cart")
-        except Order.DoesNotExist:
-            neworder=Order.objects.create(customer_id=user)
-            neworder.save()
-            cart=Cart.objects.create(customer_id=user,order_id=neworder,item=item,price=price)
-            cart.save()
-            # else:
-            #     messages.info(request,"The item is already exist in the cart")
-    return redirect('chome')
-        
-    #     order, created = Order.objects.get_or_create(c_id=request.user,price=price)
-
-    #     cart_item, item_created = Cart.objects.get_or_create(c_id=user,order_id=order, item_id=item,price=price)
-
-    #     if not item_created:
-    #         cart_item.quantity += 1
-    #         cart_item.price=cart_item.price+item.price
-    #         cart_item.save()
-    
-        #cart_item, created = Cart.objects.get_or_create(c_id=user,item_id=item,price=price)
-        #cart_item.quantity += 1
-        # if cart_item is not None:
-        #     cart_item.save()
-        #     messages.info(request,"Added to the cart")
-        # else:
-        #     messages.info(request,"The item is already exist in the cart")
-        
-        #items=Cart.objects.filter(c_id=user,status=True)
-        #return redirect('chome')
-    
-
+        order, created = Order.objects.get_or_create(customer_id=user,status=False)
+        order.save()
+        cart_item,created = Cart.objects.get_or_create(customer_id=user,order_id=order,item=item)
+        if cart_item is not None:
+            cart_item.quantity += 1
+            cart_item.price =cart_item.price+price
+            cart_item.incart=True
+            cart_item.save()
+    return redirect('chome') 
 
 
 @login_required
@@ -600,21 +561,29 @@ def add_to_order(request):
     # Order.objects.filter(c_id=user,status=False).update(status=True)
     # return redirect('chome')
 
-    items=Cart.objects.filter(customer_id=request.user,status=True,paid=False,ordered=False)
+    items=Cart.objects.filter(customer_id=request.user,incart=True,ordered=False)
     p=0
     for i in items:
         p=p+i.price
-        o_id=i.order_id
         # print(o_id)
         # print("order set")
     # print(o_id.pk)
     # print("order set")
     # Cart.objects.filter(customer_id=request.user,status=True,paid=False).update(ordered=True)
-    Cart.objects.filter(customer_id=request.user,status=True,paid=False).update(ordered=True)
+    for_o_id=Cart.objects.filter(customer_id=request.user,incart=True,ordered=False).first()
+    order_id=for_o_id.order_id.pk
+    order=Order.objects.get(pk=order_id)
+    Cart.objects.filter(order_id=order).update(ordered=True)
     # order_id=Order.objects.filter(pk=Order_id)
-    Order.objects.filter(customer_id=request.user,status=False).update(status=True,price=p)
-
+    Order.objects.filter(pk=order_id).update(status=True,price=p)
     return redirect('chome')
+
+
+def c_order_view(request):
+    # ordered_items=Cart.objects.filter(customer_id=request.user,ordered=True,paid=False)
+    ordered_items=Cart.objects.all()
+    return render(request,'c_order_view.html',{"ordered_items":ordered_items})
+
 
 
 def s_profile(request):
@@ -669,28 +638,7 @@ def s_profile(request):
 
 
 
-# def s_view_orders(request):
-#     odr=Order.objects.filter(status=True)
-#     items=Cart.objects.filter(order_id=odr)
-#     return render(request,'s_view_orders.html',{"items":items})
-
-
 def s_view_orders(request):
-    # # Retrieve all orders that are not processed
-    # orders = Order.objects.filter(status=False)
-
-    # # Create a list to store ordered items and their quantities
-    # ordered_items = []
-
-    # # Loop through each order and retrieve its items
-    # for order in orders:
-    #     items = Cart.objects.filter(order_id=order, status=True)
-    #     for item in items:
-    #         ordered_items.append({'item': item.item_id, 'quantity': item.quantity})
-
-    # return render(request, 's_view_orders.html', {'ordered_items': ordered_items})
-
     orders=Order.objects.filter(old=False,status=True)
     carts=Cart.objects.filter(ordered=True,paid=False)
-
     return render(request,'s_view_orders.html', {'orders': orders,'carts':carts})

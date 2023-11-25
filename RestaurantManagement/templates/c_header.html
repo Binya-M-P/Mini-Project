@@ -29,6 +29,7 @@
                 color:#F3B820;
                 text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
                 float:right;
+                text-decoration:none;
             }
         </style>
 <header>
@@ -42,9 +43,10 @@
         <!--<a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>-->
         {% endif %}
         <a href="{% url 'customerprofile' %}" class="astyle">PROFILE&nbsp;</a>
-        <a href="{% url 'chome' %}" class="astyle">CONTACT&nbsp;</a> 
+        <a href="{% url 'chome' %}" class="astyle">CONTACT&nbsp;</a>
+        <a href="{% url 'c_order_view' %}" class="astyle">ORDERS&nbsp;</a>
         <a href="{% url 'c_cart_view' %}" class="astyle">CART&nbsp;</a>  
-        <a href="#menu" class="astyle">MENU&nbsp;</a> 
+        <a href="{% url 'chome' %}#menu" class="astyle">MENU&nbsp;</a> 
         <a href="{% url 'chome' %}" class="astyle">SERVICE&nbsp;</a> 
         <a href="{% url 'chome' %}" class="astyle">ABOUT&nbsp;</a>   
         <a href="{% url 'chome' %}" class="astyle">HOME&nbsp;</a>   

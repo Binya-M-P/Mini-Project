@@ -141,7 +141,52 @@
             {% endfor %}
         </table> 
         
-        
+        <center><h2>Disabled Menu Items</h2></center>
+        <table align="center" height="550%" border=2px soid black>
+            <tr>
+                
+                <th>Name</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Edit</th>
+                
+            </tr>
+            {% for item in items %}
+            <tr>
+                {% if item.status == 0%}
+                <td width="13%">{{item.name}}</td>
+                <td>{{item.cid}}</td>
+                <td>{{item.sub_category}}</td>
+                <td width="30%">{{item.description}}</td>
+                <td width="15%"><img src="{{ item.image.url }}" alt="{{ item.name }}" class="fixed-size-image"></td>
+                <td>{{item.price}}</td>
+                <td>
+                    <form method="post" action="{% url 'a_status_menu' item.pk %}" name="disableitem" id="disableitem">
+                        {% csrf_token %}
+                        <button type="submit">Enable</button>
+                    </form>
+                </td>
+
+                
+                    
+                    <!--<td>{{item.status}}</td>
+                    <td><a href="">Edit</a></td>
+                    <td><a href="">Delete</a></td>-->
+                <td>
+                    <form method="post" action="{% url 'a_edit_menu_item' item.pk %}" name="MenutblEditForm" id="MenutblEditForm">
+                        {% csrf_token %}
+                        <button type="submit">Edit</button>
+                    </form>
+                </td>
+                <td><a href="#"></a></td>
+                {% endif %}
+            </tr>   
+            {% endfor %}
+        </table> 
 
         
     </div>
