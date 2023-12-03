@@ -47,13 +47,9 @@
             height: 50px;
           }
           td {
-            height: 100px;
+            height: 40px;
             text-align:center;
           }
-          .fixed-size-image {
-            width: 100px; /* Set your desired width */
-            height: 75px; /* Set your desired height */
-        }
     </style>
 </head>
 <body>
@@ -67,14 +63,7 @@
 
     <!-- Content area -->
     <div id="content">
-        <center><h1>MENU</h1>
-            
-            <form method="get" action="{% url 'a_search_menu' %}">
-                <input type="text" name="q" placeholder="Search...">
-                <button type="submit">Search</button>
-            </form>
-        
-        </center>
+        <center><h1>MENU</h1></center>
         <font size="+1" color="white">
             {% if messages %}
                 {% for message in messages %}
@@ -115,7 +104,7 @@
                 <td>{{item.cid}}</td>
                 <td>{{item.sub_category}}</td>
                 <td width="30%">{{item.description}}</td>
-                <td width="15%"><img src="{{ item.image.url }}" alt="{{ item.name }}" class="fixed-size-image"></td>
+                <td width="15%"><img src="{{ item.image.url }}" alt="{{ item.name }}" width="70%"></td>
                 <td>{{item.price}}</td>
                 <td>
                     <form method="post" action="{% url 'a_status_menu' item.pk %}" name="disableitem" id="disableitem">
@@ -141,6 +130,8 @@
             {% endfor %}
         </table> 
         
+        
+
         <center><h2>Disabled Menu Items</h2></center>
         <table align="center" height="550%" border=2px soid black>
             <tr>
@@ -157,12 +148,12 @@
             </tr>
             {% for item in items %}
             <tr>
-                {% if item.status == 0%}
+                {% if item.status == 0 %}
                 <td width="13%">{{item.name}}</td>
                 <td>{{item.cid}}</td>
                 <td>{{item.sub_category}}</td>
                 <td width="30%">{{item.description}}</td>
-                <td width="15%"><img src="{{ item.image.url }}" alt="{{ item.name }}" class="fixed-size-image"></td>
+                <td width="15%"><img src="{{ item.image.url }}" alt="{{ item.name }}" width="70%"></td>
                 <td>{{item.price}}</td>
                 <td>
                     <form method="post" action="{% url 'a_status_menu' item.pk %}" name="disableitem" id="disableitem">
@@ -187,10 +178,6 @@
             </tr>   
             {% endfor %}
         </table> 
-
-        
     </div>
 </body>
-
-
 </html>

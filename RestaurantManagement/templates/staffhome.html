@@ -1,63 +1,34 @@
 <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-<head>
-    <title>Admin Dashboard</title>
-    <style>
-        /* Reset some default styles for cleaner presentation */
-        body, h1, ul {
-            margin: 0;
-            padding: 0;
-        }
+    <head>
 
-        /* Style the sidebar */
-        #sidebar {
-            background-color: #333;
-            color: white;
-            width: 250px;
-            position: fixed;
-            height: 100%;
-            overflow: auto;
-        }
-
-        #sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: white;
-            display: block;
-        }
-
-        #sidebar a:hover {
-            background-color: #555;
-        }
-
-        /* Style the content area */
-        #logout {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        h3 
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <script>
+            h3 
             {
                 word-spacing: 30px;
                 color:#F3B820;
                 text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
                 float:right;
             }
-    </style>
-</head>
-<body>
-    {% include 's_header.html' %} 
-    {% include 's_sidebar.html' %} 
-    
-    
-      <!-- Include the sidebar template -->
-    <div id="content">
-        <!-- Content of your admin dashboard goes here -->
-    </div>
-    
-
-    <!-- Content area -->
-    
-        <h1>Staff</h1>
-</body>
+        </script>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h3>
+            {% if user.is_authenticated %}
+                    <a href="{% url 'logout_user' %}" style="color:#F3B820;">LOGOUT  </a>
+            {% endif %}
+            </h3><br><br>
+        <h1>staff home</h1>
+        <script src="" async defer></script>
+    </body>
 </html>

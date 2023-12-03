@@ -1,13 +1,12 @@
-from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
-from .models import Person,Menutbl,Category,Subcategory,Cart,Table_Details,Order
+from .models import Person,Menutbl,Category,Subcategory
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
-from django.db import models
 # Create your views here.
 def index(request):
     return render(request,'index.html')
@@ -18,11 +17,10 @@ def menu(request):
 
 #@cache_control(no_cash=True,must_validate=True,no_store=True)
 def loginpage(request):
-    if 'username' in request.session:
-        # print("withemailenter")
-        #return render(request,'chome')
-        return redirect('chome')
-        #return render(request,'chome.html')
+    # if 'username' in request.session:
+    #     print("withemailenter")
+    #     return render(request,'chome')
+    #     #return render(request,'chome.html')
     if request.method == 'POST':
         email=request.POST['username']
         password= request.POST['password']
@@ -49,20 +47,18 @@ def loginpage(request):
                 #return render(request,'chome.html',{'subcategory':subcategory,'category':category,'menu':menu})
             elif(p.role_id==2):
                 login(request, user)
-                # return render(request,'staffhome.html')
-                return redirect('staffhome')
+                return render(request,'staffhome.html')
             elif(p.role_id==3):
                 login(request, user)
                 return render(request,'adminhome.html')
             else:
-                return redirect('chome')
                 #return render(request,'chome.html')
+                return render(request,'chome.html')
         else:
             messages.error(request,"Invalid Username or password")
             return redirect('loginpage')
     else:
         return render(request,'loginpage.html')
-    
 def signup(request):
     if request.method == 'POST':
         username=request.POST.get('username')
@@ -103,19 +99,18 @@ def chome(request):
         #return render(request,'chome.html')
         return render(request,'chome.html',{'subcategory':subcategory,'category':category,'menu':menu})
     else :
-        return redirect('loginpage')
+        return render(request,'lognpage.html')
     # salads=Menutbl.objects.filter(cid=1)
     # pizza=Menutbl.objects.filter(cid=2)
     # burger=Menutbl.objects.filter(cid=3)
     # return render(request,'chome.html',{"salads":salads,"pizza":pizza,"burger":burger})
 
 
-@login_required
-@cache_control(no_cash=True,must_validate=True,no_store=True)
+
 def staffhome(request):
     if 'username' in request.session:
         return render(request,'staffhome.html')
-    return redirect('loginpage')
+    return redirect(loginpage)
 
     
 
@@ -147,8 +142,8 @@ def logout_user(request):
         request.session.flush()
         request.session.clear()
         #del request.session['username']
-        #return render(request,'loginpage.html')
-        return redirect('loginpage')
+        return render(request,'loginpage.html')
+        #return redirect('loginpage')
     else:
         logout(request)
         request.session.flush()
@@ -213,8 +208,7 @@ def a_view_person(request):
     return render(request,'a_view_person.html',{"person":person})
 
 
-@login_required
-@cache_control(no_cash=True,must_validate=True,no_store=True)
+
 def customerprofile(request):
 
     user_profile = Person.objects.get(name=request.user)
@@ -234,7 +228,7 @@ def customerprofile(request):
             user_profile.address=address
             user_profile.email=email
             #user_profile.save()
-            Person.objects.filter(pk=user_profile.pk).update(address=address,phone=phone)
+            Person.objects.filter(pk=user_profile.pk).update(address=address)
             #data2=Users(USERNAME=username,Email address=email)
             messages.success(request,"Changes are saved successfully !")
             
@@ -307,8 +301,6 @@ def a_add_items(request):
 def a_view_menu(request):
     items=Menutbl.objects.all()
     return render(request,'a_view_menu.html',{"items":items})
-
-
 def a_view_category(request):
     categories=Category.objects.all()
     #subcategory=Subcategory.objects.all()
@@ -483,173 +475,3 @@ def a_status_category(request,item_id):
     else :
         Category.objects.filter(pk=item_id).update(status=True)
     return redirect('a_view_category')
-
-
-def a_search_menu(request):
-    query = request.GET.get('q', '')
-    try:
-        # Attempt to convert the query to a float, indicating a price search
-        price_query = float(query)
-        items = Menutbl.objects.filter(price=price_query)
-    except ValueError:
-        # If conversion to float fails, perform a text-based search by name, category, and subcategory
-        items = Menutbl.objects.filter(
-            models.Q(name__icontains=query) |
-            models.Q(cid__cname__icontains=query) |  # Search by category name
-            models.Q(sub_category__scname__icontains=query)  # Search by subcategory name
-        )
-
-    return render(request, 'a_view_menu.html', {'items': items, 'search_query': query})
-
-@login_required
-@cache_control(no_cash=True,must_validate=True,no_store=True)
-def c_cart_view(request):
-    
-    items=Cart.objects.filter(customer_id=request.user,status=True,paid=False,ordered=False)
-    p=0
-    for i in items:
-        p=p+i.price
-    return render(request,'c_cart_view.html',{"items":items,"p":p})
-    # return render(request,'c_cart_view.html')
-
-
-@login_required
-@cache_control(no_cash=True,must_validate=True,no_store=True)
-def c_add_to_cart(request,item_id):
-    if request.method == 'POST':
-        item = Menutbl.objects.get(pk=item_id)
-        user = User.objects.get(username=request.user)
-        price=item.price
-        order, created = Order.objects.get_or_create(customer_id=user,status=False)
-        order.save()
-        cart_item,created = Cart.objects.get_or_create(customer_id=user,order_id=order,item=item)
-        if cart_item is not None:
-            cart_item.quantity += 1
-            cart_item.price =cart_item.price+price
-            cart_item.incart=True
-            cart_item.save()
-    return redirect('chome') 
-
-
-@login_required
-@cache_control(no_cash=True,must_validate=True,no_store=True)
-def c_update_cart(request,item_id):
-    cart_item=Cart.objects.get(pk=item_id)
-    action = request.POST.get('action')
-    if action == 'increase':
-        q=cart_item.quantity + 1
-        p=cart_item.price+cart_item.item.price
-        Cart.objects.filter(pk=item_id).update(quantity=q,price=p)
-    elif action == 'decrease':
-        if cart_item.quantity == 1:
-            Cart.objects.filter(pk=item_id).delete()
-        else:
-            q=cart_item.quantity - 1
-            p=cart_item.price-cart_item.item.price
-            Cart.objects.filter(pk=item_id).update(quantity=q,price=p)
-    return redirect('c_cart_view')
-
-
-
-
-def add_to_order(request):
-    # user=User.objects.get(username=request.user)
-    # cart=Cart.objects.filter(customer_id=user,status=True)
-    # p=0
-    # for i in cart:
-    #     p=p+i.price
-    # Order.objects.filter(c_id=user,status=False).update(status=True)
-    # return redirect('chome')
-
-    items=Cart.objects.filter(customer_id=request.user,incart=True,ordered=False)
-    p=0
-    for i in items:
-        p=p+i.price
-        # print(o_id)
-        # print("order set")
-    # print(o_id.pk)
-    # print("order set")
-    # Cart.objects.filter(customer_id=request.user,status=True,paid=False).update(ordered=True)
-    for_o_id=Cart.objects.filter(customer_id=request.user,incart=True,ordered=False).first()
-    order_id=for_o_id.order_id.pk
-    order=Order.objects.get(pk=order_id)
-    Cart.objects.filter(order_id=order).update(ordered=True)
-    # order_id=Order.objects.filter(pk=Order_id)
-    Order.objects.filter(pk=order_id).update(status=True,price=p)
-    return redirect('chome')
-
-
-def c_order_view(request):
-    ordered_items=Cart.objects.filter(customer_id=request.user,ordered=True,paid=False)
-    oneitem=Cart.objects.filter(customer_id=request.user,ordered=True,paid=False).first()
-    if oneitem is not None:
-        prepared=oneitem.prepared
-        delivered=oneitem.delivered
-    else:
-        prepared=False
-        delivered=False
-    return render(request,'c_order_view.html',{"ordered_items":ordered_items,"prepared":prepared,"delivered":delivered})
-
-
-
-def s_profile(request):
-    user_profile = Person.objects.get(name=request.user)
-    if user_profile is None:
-        return redirect('loginpage')
-    if request.method == 'POST':
-        username=request.POST.get('username')
-        email=request.POST.get('email')
-        phone=request.POST.get('phone')
-        address=request.POST.get('address')
-        #role=request.POST.get('category')
-        #password=request.POST.get('password')
-        #print(username)
-        if username != '' and email != '' and phone != '':
-            user_profile.name=username
-            user_profile.phone=phone
-            user_profile.address=address
-            user_profile.email=email
-            #user_profile.save()
-            Person.objects.filter(pk=user_profile.pk).update(address=address,phone=phone)
-            #data2=Users(USERNAME=username,Email address=email)
-            messages.success(request,"Changes are saved successfully !")
-            
-            return redirect('s_profile')
-        else:
-            messages.error(request,"Updation failed !")
-    else: 
-        return render(request, 's_profile.html', {'user_profile': user_profile})
-
-def s_view_orders(request):
-    orders=Order.objects.filter(old=False,status=True,delivered=False)
-    carts=Cart.objects.filter(ordered=True)
-    return render(request,'s_view_orders.html', {'orders': orders,'carts':carts})
-
-
-def ordered_to_prepared(request,item_id):
-    cart=Cart.objects.get(pk=item_id)
-    Cart.objects.filter(pk=item_id).update(prepared=True)
-    return redirect('s_view_orders')
-
-def prepared_to_ready_to_deliver(request,item_id):
-    cart=Cart.objects.get(pk=item_id)
-    Cart.objects.filter(pk=item_id).update(ready_to_deliver=True)
-    order_id=cart.order_id.pk
-    #order=Order.objects.filter(pk=order_id)
-    ordered_items_in_cart=Cart.objects.filter(order_id=order_id)
-    finished=1
-    for ord in ordered_items_in_cart:
-        if ord.ready_to_deliver is False:
-            finished=0
-    if finished == 1:
-        Order.objects.filter(pk=order_id).update(ready_to_deliver=True)
-    return redirect('s_view_orders')
-
-def deliver_order(request,order_id):
-    Order.objects.filter(pk=order_id).update(delivered=True)
-    order=Order.objects.filter(pk=order_id)
-    order=Order.objects.get(pk=order_id)
-    if order.paid_status is True:
-        Order.objects.filter(pk=order_id).update(old=True)
-    Cart.objects.filter(order_id=order).update(delivered=True)
-    return redirect('s_view_orders')

@@ -47,20 +47,6 @@ urlpatterns = [
     path('a_status_menu/<int:item_id>/',views.a_status_menu,name="a_status_menu"),
     path('a_edit_category/<int:item_id>/',views.a_edit_category,name="a_edit_category"),
     path('a_status_category/<int:item_id>/',views.a_status_category,name="a_status_category"),
-    path('a_search_menu/', views.a_search_menu, name='a_search_menu'),
-    path('c_cart_view/', views.c_cart_view, name='c_cart_view'),
-    path('c_add_to_cart/<int:item_id>', views.c_add_to_cart, name='c_add_to_cart'),
-    path('c_update_cart/<int:item_id>', views.c_update_cart, name='c_update_cart'),
-    path('s_profile', views.s_profile, name='s_profile'),
-    path('s_view_orders', views.s_view_orders, name='s_view_orders'),
-    path('add_to_order', views.add_to_order, name='add_to_order'),
-    path('c_order_view', views.c_order_view, name='c_order_view'),
-    path('ordered_to_prepared/<int:item_id>', views.ordered_to_prepared, name='ordered_to_prepared'),
-    path('prepared_to_ready_to_deliver/<int:item_id>', views.prepared_to_ready_to_deliver, name='prepared_to_ready_to_deliver'),
-    path('deliver_order/<int:order_id>', views.deliver_order, name='deliver_order'),
-
-
-
 
 
 
