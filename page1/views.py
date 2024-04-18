@@ -861,6 +861,7 @@ def c_table_reservation(request):
                     list_of_occupied_tables.append(occupied_table.table_id.t_no)
                     reserved=reserved+n
 
+        
         available_seats=40-reserved
         print(available_seats)
         if(available_seats < numberofpersons):
